@@ -1,33 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/click_content"
+    <TextView android:text="KCrason，黎琴"
+        android:id="@+id/praise_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="KCrason,黎琴"
-        android:textColor="#697A9F"/>
+        android:textColor="#697A9F" />
 
     <com.kcrason.highperformancefriendscircle.VerticalCommentWidget
+        android:layout_marginTop="4dp"
         android:id="@+id/vertical_comment_widget"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="哈哈哈"
-            android:textColor="#697A9F"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="加油！"
-            android:textColor="#697A9F"/>
-    </com.kcrason.highperformancefriendscircle.VerticalCommentWidget>
+        android:orientation="vertical" />
 </LinearLayout>

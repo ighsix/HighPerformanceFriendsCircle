@@ -22,4 +22,11 @@ public class Constants {
         public final static int FRIEND_CIRCLE_TYPE_WORD_AND_URL = 2;
     }
 
+    public final static class CommentType {
+        //单一评论
+        public final static int COMMENT_TYPE_SINGLE = 0;
+        //回复评论
+        public final static int COMMENT_TYPE_REPLY = 1;
+    }
+
 }

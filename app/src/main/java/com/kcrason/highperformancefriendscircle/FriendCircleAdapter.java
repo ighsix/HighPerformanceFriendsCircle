@@ -5,6 +5,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,8 +22,11 @@ public class FriendCircleAdapter extends RecyclerView.Adapter<FriendCircleAdapte
 
     private LayoutInflater mLayoutInflater;
 
-    public FriendCircleAdapter(Context context) {
+    private List<FriendCircleBean> mFriendCircleBeans;
+
+    public FriendCircleAdapter(Context context, List<FriendCircleBean> friendCircleBeans) {
         this.mContext = context;
+        this.mFriendCircleBeans = friendCircleBeans;
         mLayoutInflater = LayoutInflater.from(context);
     }
 
@@ -39,49 +45,44 @@ public class FriendCircleAdapter extends RecyclerView.Adapter<FriendCircleAdapte
 
     @Override
     public void onBindViewHolder(BaseFriendCircleViewHolder holder, int position) {
-        if (holder != null) {
+        if (holder != null && mFriendCircleBeans != null && position < mFriendCircleBeans.size()) {
+            FriendCircleBean friendCircleBean = mFriendCircleBeans.get(position);
+            holder.txtUserName.setText(friendCircleBean.getUserName());
+            holder.txtContent.setText(friendCircleBean.getContent());
             if (holder instanceof OnlyWordViewHolder) {
                 OnlyWordViewHolder onlyWordViewHolder = (OnlyWordViewHolder) holder;
+                onlyWordViewHolder.verticalCommentWidget.addComments(friendCircleBean.getCommentBeans());
             } else if (holder instanceof WordAndUrlViewHolder) {
-
+                WordAndUrlViewHolder wordAndUrlViewHolder = (WordAndUrlViewHolder) holder;
+                wordAndUrlViewHolder.verticalCommentWidget.addComments(friendCircleBean.getCommentBeans());
+                wordAndUrlViewHolder.layoutUrl.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(mContext, "You Click Layout Url", Toast.LENGTH_SHORT).show();
+                    }
+                });
             } else if (holder instanceof WordAndImagesViewHolder) {
                 WordAndImagesViewHolder wordAndImagesViewHolder = (WordAndImagesViewHolder) holder;
-                int itemSize = wordAndImagesViewHolder.nineGridView.getChildWidth();
-                wordAndImagesViewHolder.nineGridView.setAdapter(new NineImageAdapter(mContext, itemSize, makeImages()));
+                wordAndImagesViewHolder.nineGridView.setOnImageClickListener(new NineGridView.OnImageClickListener() {
+                    @Override
+                    public void onImageClick(int position, View view) {
+                        Toast.makeText(mContext, "You Click position " + position, Toast.LENGTH_SHORT).show();
+                    }
+                });
+                wordAndImagesViewHolder.nineGridView.setAdapter(new NineImageAdapter(mContext, friendCircleBean.getImageBeans()));
             }
         }
     }
 
-    private List<ImageBean> makeImages() {
-        List<ImageBean> imageBeans = new ArrayList<>();
-        int randomCount = (int) (Math.random() * 9);
-        if (randomCount == 0) {
-            randomCount = randomCount + 2;
-        } else if (randomCount == 1) {
-            randomCount = randomCount + 1;
-        }
-        for (int i = 0; i < randomCount; i++) {
-            ImageBean imageBean = new ImageBean();
-            imageBean.setImageUrl("http://oh2qy1yiv.bkt.clouddn.com/" + Constants.urls[(int) (Math.random() * 25)]);
-            imageBeans.add(imageBean);
-        }
-        return imageBeans;
-    }
 
     @Override
     public int getItemViewType(int position) {
-        int randomValue = (int) (Math.random() * 300);
-        if (randomValue < 100) {
-            return Constants.FriendCircleType.FRIEND_CIRCLE_TYPE_ONLY_WORD;
-        } else if (randomValue < 200) {
-            return Constants.FriendCircleType.FRIEND_CIRCLE_TYPE_WORD_AND_URL;
-        }
-        return Constants.FriendCircleType.FRIEND_CIRCLE_TYPE_WORD_AND_IMAGES;
+        return mFriendCircleBeans.get(position).getViewType();
     }
 
     @Override
     public int getItemCount() {
-        return 300;
+        return mFriendCircleBeans == null ? 0 : mFriendCircleBeans.size();
     }
 
     static class WordAndImagesViewHolder extends BaseFriendCircleViewHolder {
@@ -97,8 +98,11 @@ public class FriendCircleAdapter extends RecyclerView.Adapter<FriendCircleAdapte
 
     static class WordAndUrlViewHolder extends BaseFriendCircleViewHolder {
 
+        LinearLayout layoutUrl;
+
         public WordAndUrlViewHolder(View itemView) {
             super(itemView);
+            layoutUrl = itemView.findViewById(R.id.layout_url);
         }
     }
 
@@ -111,8 +115,16 @@ public class FriendCircleAdapter extends RecyclerView.Adapter<FriendCircleAdapte
 
     static class BaseFriendCircleViewHolder extends RecyclerView.ViewHolder {
 
+        public VerticalCommentWidget verticalCommentWidget;
+
+        public TextView txtContent;
+        public TextView txtUserName;
+
         public BaseFriendCircleViewHolder(View itemView) {
             super(itemView);
+            verticalCommentWidget = itemView.findViewById(R.id.vertical_comment_widget);
+            txtContent = itemView.findViewById(R.id.txt_content);
+            txtUserName = itemView.findViewById(R.id.txt_user_name);
         }
     }
 }

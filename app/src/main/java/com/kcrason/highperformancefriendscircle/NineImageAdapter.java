@@ -1,11 +1,14 @@
 package com.kcrason.highperformancefriendscircle;
 
 import android.content.Context;
-import android.media.Image;
+import android.graphics.Color;
+import android.util.TypedValue;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
 
 import java.util.List;
@@ -23,11 +26,20 @@ public class NineImageAdapter implements NineGridView.NineGridAdapter<ImageBean>
 
     private int mItemSize;
 
+    private RequestOptions mRequestOptions;
+    private int mImageBackgroundColor = Color.parseColor("#f2f2f2");
 
-    public NineImageAdapter(Context context, int itemSize, List<ImageBean> imageBeans) {
+
+    public NineImageAdapter(Context context, List<ImageBean> imageBeans) {
         this.mContext = context;
-        this.mItemSize = itemSize;
+        this.mItemSize = (context.getResources().getDisplayMetrics().widthPixels -
+                2 * dp2px(context, 4) - dp2px(context, 54)) / 3;
+        this.mRequestOptions = new RequestOptions().centerCrop().override(mItemSize);
         this.mImageBeans = imageBeans;
+    }
+
+    private int dp2px(Context context, float dpValue) {
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpValue, context.getResources().getDisplayMetrics());
     }
 
     @Override
@@ -43,19 +55,16 @@ public class NineImageAdapter implements NineGridView.NineGridAdapter<ImageBean>
 
     @Override
     public View getView(int position, View itemView) {
-        ImageView imageView = null;
+        ImageView imageView;
         if (itemView == null) {
             imageView = new ImageView(mContext);
+            imageView.setBackgroundColor(mImageBackgroundColor);
+            imageView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         } else {
             imageView = (ImageView) itemView;
         }
-
-        if (mItemSize > 0) {
-            Glide.with(mContext).load(mImageBeans.get(position).getImageUrl())
-                    .apply(new RequestOptions().centerCrop()
-                            .placeholder(R.drawable.avatar_icon).override(mItemSize, mItemSize))
-                    .into(imageView);
-        }
+        String url = mImageBeans.get(position).getImageUrl();
+        Glide.with(mContext).load(url).apply(mRequestOptions).transition(DrawableTransitionOptions.withCrossFade()).into(imageView);
         return imageView;
     }
 }

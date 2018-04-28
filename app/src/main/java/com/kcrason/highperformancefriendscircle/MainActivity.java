@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             }
         });
 
+
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mFriendCircleAdapter = new FriendCircleAdapter(this, makeFriendCircleBeans());
         mRecyclerView.setAdapter(mFriendCircleAdapter);

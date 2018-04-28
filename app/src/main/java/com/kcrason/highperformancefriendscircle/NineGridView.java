@@ -53,11 +53,12 @@ public class NineGridView extends ViewGroup {
         initMatrix(newCount);
         removeScrapViews(oldCount, newCount);
         addChildrenData(adapter);
+        requestLayout();
     }
 
     private void removeScrapViews(int oldCount, int newCount) {
         if (newCount < oldCount) {
-            removeViews(newCount - 1, oldCount - newCount);
+            removeViewsInLayout(newCount - 1, oldCount - newCount);
         }
     }
 
@@ -90,7 +91,7 @@ public class NineGridView extends ViewGroup {
                 if (hasChild) { // 为了防止有的逗比不复用RecycleView做处理
                     removeView(recycleView);
                 }
-                addView(child);
+                addViewInLayout(child,i,child.getLayoutParams(),true);
             }
         }
     }

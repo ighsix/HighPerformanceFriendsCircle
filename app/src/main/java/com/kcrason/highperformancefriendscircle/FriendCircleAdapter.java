@@ -2,6 +2,8 @@ package com.kcrason.highperformancefriendscircle;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,7 +11,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -47,14 +48,11 @@ public class FriendCircleAdapter extends RecyclerView.Adapter<FriendCircleAdapte
     public void onBindViewHolder(BaseFriendCircleViewHolder holder, int position) {
         if (holder != null && mFriendCircleBeans != null && position < mFriendCircleBeans.size()) {
             FriendCircleBean friendCircleBean = mFriendCircleBeans.get(position);
-            holder.txtUserName.setText(friendCircleBean.getUserName());
-            holder.txtContent.setText(friendCircleBean.getContent());
+            makeBaseData(holder, friendCircleBean,position);
             if (holder instanceof OnlyWordViewHolder) {
                 OnlyWordViewHolder onlyWordViewHolder = (OnlyWordViewHolder) holder;
-                onlyWordViewHolder.verticalCommentWidget.addComments(friendCircleBean.getCommentBeans());
             } else if (holder instanceof WordAndUrlViewHolder) {
                 WordAndUrlViewHolder wordAndUrlViewHolder = (WordAndUrlViewHolder) holder;
-                wordAndUrlViewHolder.verticalCommentWidget.addComments(friendCircleBean.getCommentBeans());
                 wordAndUrlViewHolder.layoutUrl.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -71,6 +69,30 @@ public class FriendCircleAdapter extends RecyclerView.Adapter<FriendCircleAdapte
                 });
                 wordAndImagesViewHolder.nineGridView.setAdapter(new NineImageAdapter(mContext, friendCircleBean.getImageBeans()));
             }
+        }
+    }
+
+    private void makeBaseData(BaseFriendCircleViewHolder holder, FriendCircleBean friendCircleBean, int position) {
+        holder.txtUserName.setText(friendCircleBean.getUserName());
+        holder.txtContent.setText(friendCircleBean.getContent());
+        List<PraiseBean> praiseBeans = friendCircleBean.getPraiseBeans();
+        Log.i("KCrason", "makeBaseData: " + praiseBeans.size() + "//" + position);
+        if (praiseBeans != null && praiseBeans.size() > 0) {
+            holder.txtPraiseContent.setVisibility(View.VISIBLE);
+            holder.txtPraiseContent.setText(friendCircleBean.getPraiseUserNameRichText());
+        } else {
+            holder.txtPraiseContent.setVisibility(View.GONE);
+        }
+        List<CommentBean> commentBeans = friendCircleBean.getCommentBeans();
+        if (commentBeans != null && commentBeans.size() > 0) {
+            if (praiseBeans != null && praiseBeans.size() > 0) {
+                holder.viewLine.setVisibility(View.VISIBLE);
+            } else {
+                holder.viewLine.setVisibility(View.GONE);
+            }
+            holder.verticalCommentWidget.addComments(commentBeans);
+        } else {
+            holder.viewLine.setVisibility(View.GONE);
         }
     }
 
@@ -120,11 +142,17 @@ public class FriendCircleAdapter extends RecyclerView.Adapter<FriendCircleAdapte
         public TextView txtContent;
         public TextView txtUserName;
 
+        public View viewLine;
+        public TextView txtPraiseContent;
+
         public BaseFriendCircleViewHolder(View itemView) {
             super(itemView);
             verticalCommentWidget = itemView.findViewById(R.id.vertical_comment_widget);
             txtContent = itemView.findViewById(R.id.txt_content);
             txtUserName = itemView.findViewById(R.id.txt_user_name);
+            txtPraiseContent = itemView.findViewById(R.id.praise_content);
+            viewLine = itemView.findViewById(R.id.view_line);
+            txtPraiseContent.setMovementMethod(LinkMovementMethod.getInstance());
         }
     }
 }

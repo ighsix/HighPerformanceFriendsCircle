@@ -19,7 +19,6 @@ import java.util.List;
  */
 public class NineImageAdapter implements NineGridView.NineGridAdapter<ImageBean> {
 
-
     private List<ImageBean> mImageBeans;
 
     private Context mContext;
@@ -32,14 +31,10 @@ public class NineImageAdapter implements NineGridView.NineGridAdapter<ImageBean>
 
     public NineImageAdapter(Context context, List<ImageBean> imageBeans) {
         this.mContext = context;
-        this.mItemSize = (context.getResources().getDisplayMetrics().widthPixels -
-                2 * dp2px(context, 4) - dp2px(context, 54)) / 3;
+        this.mItemSize = (Utils.getScreenWidth(context) -
+                2 * Utils.dp2px(context, 4) - Utils.dp2px(context, 54)) /3;
         this.mRequestOptions = new RequestOptions().centerCrop().override(mItemSize);
         this.mImageBeans = imageBeans;
-    }
-
-    private int dp2px(Context context, float dpValue) {
-        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpValue, context.getResources().getDisplayMetrics());
     }
 
     @Override

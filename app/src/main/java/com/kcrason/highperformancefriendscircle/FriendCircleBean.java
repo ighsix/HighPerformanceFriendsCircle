@@ -1,5 +1,7 @@
 package com.kcrason.highperformancefriendscircle;
 
+import android.text.SpannableStringBuilder;
+
 import java.util.List;
 
 public class FriendCircleBean {
@@ -73,6 +75,16 @@ public class FriendCircleBean {
     private List<PraiseBean> praiseBeans;
 
     private List<ImageBean> imageBeans;
+
+    public SpannableStringBuilder getPraiseUserNameRichText() {
+        return praiseUserNameRichText;
+    }
+
+    public void setPraiseUserNameRichText(SpannableStringBuilder praiseUserNameRichText) {
+        this.praiseUserNameRichText = praiseUserNameRichText;
+    }
+
+    private SpannableStringBuilder praiseUserNameRichText;
 
 
 }

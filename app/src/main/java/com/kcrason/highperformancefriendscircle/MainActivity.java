@@ -10,6 +10,7 @@ import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
@@ -63,8 +64,11 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             }
             friendCircleBean.setCommentBeans(makeCommentBeans());
             friendCircleBean.setImageBeans(makeImages());
-            friendCircleBean.setContent("看了这款AKG,才知道2(beats)就是个渣渣!" + i);
-            friendCircleBean.setUserName("KCrason说");
+            List<PraiseBean> praiseBeans = makePraiseBeans();
+            friendCircleBean.setPraiseUserNameRichText(Utils.makePraiseNameRichText(this, praiseBeans));
+            friendCircleBean.setPraiseBeans(praiseBeans);
+            friendCircleBean.setContent(Constants.CONTENT[(int) (Math.random() * 10)]);
+            friendCircleBean.setUserName(Constants.USER_NAME[(int) (Math.random() * 30)]);
             friendCircleBeans.add(friendCircleBean);
         }
         return friendCircleBeans;
@@ -88,20 +92,33 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     }
 
 
+    private List<PraiseBean> makePraiseBeans() {
+        List<PraiseBean> praiseBeans = new ArrayList<>();
+        int randomCount = (int) (Math.random() * 3);
+        for (int i = 0; i < randomCount; i++) {
+            PraiseBean praiseBean = new PraiseBean();
+            praiseBean.setPraiseUserName(Constants.USER_NAME[(int) (Math.random() * 30)]);
+            praiseBeans.add(praiseBean);
+        }
+        return praiseBeans;
+    }
+
+
     private List<CommentBean> makeCommentBeans() {
         List<CommentBean> commentBeans = new ArrayList<>();
-        int randomCount = (int) (Math.random() * 9);
+        int randomCount = (int) (Math.random() * 30);
         for (int i = 0; i < randomCount; i++) {
             CommentBean commentBean = new CommentBean();
             if ((int) (Math.random() * 100) % 2 == 0) {
                 commentBean.setCommentType(Constants.CommentType.COMMENT_TYPE_SINGLE);
-                commentBean.setChildUserName("哈哈哈" + i);
+                commentBean.setChildUserName(Constants.USER_NAME[(int) (Math.random() * 30)]);
             } else {
                 commentBean.setCommentType(Constants.CommentType.COMMENT_TYPE_REPLY);
-                commentBean.setChildUserName("二狗子" + i);
-                commentBean.setParentUserName("KCrason" + i);
+                commentBean.setChildUserName(Constants.USER_NAME[(int) (Math.random() * 30)]);
+                commentBean.setParentUserName(Constants.USER_NAME[(int) (Math.random() * 30)]);
             }
-            commentBean.setCommentContent("今天我要上天了" + i);
+            commentBean.setCommentContent(Constants.COMMENT_CONTENT[(int) (Math.random() * 30)]);
+            commentBean.build(this);
             commentBeans.add(commentBean);
         }
         return commentBeans;

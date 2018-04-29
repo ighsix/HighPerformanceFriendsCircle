@@ -1,13 +1,28 @@
-package com.kcrason.highperformancefriendscircle;
+package com.kcrason.highperformancefriendscircle.beans;
 
 import android.content.Context;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
 
+import com.kcrason.highperformancefriendscircle.Constants;
+import com.kcrason.highperformancefriendscircle.span.TextClickSpan;
+
 public class CommentBean {
 
     private int commentType;
+
+    private String parentUserName;
+
+    private String childUserName;
+
+    private int parentUserId;
+
+    private int childUserId;
+
+    private String commentContent;
+
+
 
     public int getCommentType() {
         return commentType;
@@ -16,10 +31,6 @@ public class CommentBean {
     public void setCommentType(int commentType) {
         this.commentType = commentType;
     }
-
-    private String parentUserName;
-
-    private String childUserName;
 
     public String getParentUserName() {
         return parentUserName;
@@ -36,9 +47,6 @@ public class CommentBean {
     public void setChildUserName(String childUserName) {
         this.childUserName = childUserName;
     }
-
-    private int parentUserId;
-
 
     public int getParentUserId() {
         return parentUserId;
@@ -64,9 +72,7 @@ public class CommentBean {
         this.commentContent = commentContent;
     }
 
-    private int childUserId;
 
-    private String commentContent;
 
 
     /**
@@ -90,7 +96,7 @@ public class CommentBean {
         String richText = String.format("%s:%s", childUserName, commentContent);
         SpannableStringBuilder builder = new SpannableStringBuilder(richText);
         if (!TextUtils.isEmpty(childUserName)) {
-            builder.setSpan(new UserNameClickableSpan(context, childUserName), 0, childUserName.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            builder.setSpan(new TextClickSpan(context, childUserName), 0, childUserName.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
         return builder;
     }
@@ -102,12 +108,12 @@ public class CommentBean {
         int parentEnd = 0;
         if (!TextUtils.isEmpty(parentUserName)) {
             parentEnd = parentUserName.length();
-            builder.setSpan(new UserNameClickableSpan(context, parentUserName), 0, parentEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            builder.setSpan(new TextClickSpan(context, parentUserName), 0, parentEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
         if (!TextUtils.isEmpty(childUserName)) {
             int childStart = parentEnd + 2;
             int childEnd = childStart + childUserName.length();
-            builder.setSpan(new UserNameClickableSpan(context, childUserName), childStart, childEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            builder.setSpan(new TextClickSpan(context, childUserName), childStart, childEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
         return builder;
     }

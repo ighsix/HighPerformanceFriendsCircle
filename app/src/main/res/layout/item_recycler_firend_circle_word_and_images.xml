@@ -6,9 +6,10 @@
              android:padding="10dp">
 
     <ImageView
+        android:id="@+id/img_avatar"
         android:layout_width="44dp"
         android:layout_height="44dp"
-        android:src="@drawable/avatar_icon"/>
+        android:background="@color/base_F2F2F2"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -30,7 +31,7 @@
             android:id="@+id/txt_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="6dp"
             android:background="@drawable/selector_view_content_state"
             android:clickable="true"
             android:lineSpacingExtra="3dp"
@@ -38,15 +39,15 @@
             android:textSize="16sp"
             />
 
-        <com.kcrason.highperformancefriendscircle.NineGridView
+        <com.kcrason.highperformancefriendscircle.widgets.NineGridView
             android:id="@+id/nine_grid_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="4dp"
             android:layout_marginTop="8dp"/>
 
+        <include layout="@layout/include_item_recycler_location" />
         <include layout="@layout/include_item_recycler_time"/>
-
         <include layout="@layout/include_item_recycler_praise_and_comment"/>
 
     </LinearLayout>

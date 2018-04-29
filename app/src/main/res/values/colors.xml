@@ -8,4 +8,10 @@
     <color name="base_F8F8F8">#f8f8f8</color>
     <color name="base_FFFFFF">#ffffff</color>
     <color name="base_697A9F">#697A9F</color>
+    <color name="base_F0F0F0">#F0F0F0</color>
+    <color name="base_F5F5F5">#F5F5F5</color>
+    <color name="base_DCDCDC">#DCDCDC</color>
+    <color name="base_B5B5B5">#B5B5B5</color>
+    <color name="base_222230">#222230</color>
+    <color name="base_000000">#000000</color>
 </resources>

@@ -1,4 +1,4 @@
-package com.kcrason.highperformancefriendscircle;
+package com.kcrason.highperformancefriendscircle.beans;
 
 /**
  * @author KCrason

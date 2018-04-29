@@ -1,4 +1,4 @@
-package com.kcrason.highperformancefriendscircle;
+package com.kcrason.highperformancefriendscircle.widgets;
 
 import android.content.Context;
 import android.util.AttributeSet;

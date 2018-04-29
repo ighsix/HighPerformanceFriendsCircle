@@ -1,18 +1,34 @@
 package com.kcrason.highperformancefriendscircle;
 
+
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.kcrason.highperformancefriendscircle.adapters.FriendCircleAdapter;
+import com.kcrason.highperformancefriendscircle.beans.CommentBean;
+import com.kcrason.highperformancefriendscircle.beans.FriendCircleBean;
+import com.kcrason.highperformancefriendscircle.beans.ImageBean;
+import com.kcrason.highperformancefriendscircle.beans.OtherInfoBean;
+import com.kcrason.highperformancefriendscircle.beans.PraiseBean;
+import com.kcrason.highperformancefriendscircle.beans.UserBean;
+import com.kcrason.highperformancefriendscircle.interfaces.OnPraiseOrCommentClickListener;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
+import io.reactivex.Single;
+import io.reactivex.SingleOnSubscribe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+
+public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener,
+        OnPraiseOrCommentClickListener {
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
@@ -47,13 +63,14 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mFriendCircleAdapter = new FriendCircleAdapter(this, makeFriendCircleBeans());
+        mFriendCircleAdapter = new FriendCircleAdapter(this);
         mRecyclerView.setAdapter(mFriendCircleAdapter);
+        asyncMakeData();
     }
 
     private List<FriendCircleBean> makeFriendCircleBeans() {
         List<FriendCircleBean> friendCircleBeans = new ArrayList<>();
-        for (int i = 0; i < 300; i++) {
+        for (int i = 0; i < 1000; i++) {
             FriendCircleBean friendCircleBean = new FriendCircleBean();
             int randomValue = (int) (Math.random() * 300);
             if (randomValue < 100) {
@@ -69,7 +86,23 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             friendCircleBean.setPraiseUserNameRichText(Utils.makePraiseNameRichText(this, praiseBeans));
             friendCircleBean.setPraiseBeans(praiseBeans);
             friendCircleBean.setContent(Constants.CONTENT[(int) (Math.random() * 10)]);
-            friendCircleBean.setUserName(Constants.USER_NAME[(int) (Math.random() * 30)]);
+
+
+            UserBean userBean = new UserBean();
+            userBean.setUserName(Constants.USER_NAME[(int) (Math.random() * 30)]);
+            userBean.setUserAvatarUrl(Constants.IMAGE_URL[(int) (Math.random() * 50)]);
+            friendCircleBean.setUserBean(userBean);
+
+
+            OtherInfoBean otherInfoBean = new OtherInfoBean();
+            otherInfoBean.setTime(Constants.TIMES[(int) (Math.random() * 20)]);
+            int random = (int) (Math.random() * 30);
+            if (random < 20) {
+                otherInfoBean.setSource(Constants.SOURCE[random]);
+            } else {
+                otherInfoBean.setSource("");
+            }
+            friendCircleBean.setOtherInfoBean(otherInfoBean);
             friendCircleBeans.add(friendCircleBean);
         }
         return friendCircleBeans;
@@ -80,13 +113,11 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         List<ImageBean> imageBeans = new ArrayList<>();
         int randomCount = (int) (Math.random() * 9);
         if (randomCount == 0) {
-            randomCount = randomCount + 2;
-        } else if (randomCount == 1) {
             randomCount = randomCount + 1;
         }
         for (int i = 0; i < randomCount; i++) {
             ImageBean imageBean = new ImageBean();
-            imageBean.setImageUrl("http://oh2qy1yiv.bkt.clouddn.com/" + Constants.urls[(int) (Math.random() * 20)] + ".jpg");
+            imageBean.setImageUrl(Constants.IMAGE_URL[(int) (Math.random() * 50)]);
             imageBeans.add(imageBean);
         }
         return imageBeans;
@@ -125,9 +156,41 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         return commentBeans;
     }
 
+    private Disposable mDisposable;
+
+    private void asyncMakeData() {
+        mDisposable = Single.create((SingleOnSubscribe<List<FriendCircleBean>>) emitter ->
+                emitter.onSuccess(makeFriendCircleBeans())).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe((friendCircleBeans, throwable) -> {
+                    mSwipeRefreshLayout.setRefreshing(false);
+                    if (friendCircleBeans != null && throwable == null) {
+                        mFriendCircleAdapter.setFriendCircleBeans(friendCircleBeans);
+                    }
+                });
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mDisposable != null && !mDisposable.isDisposed()) {
+            mDisposable.dispose();
+        }
+    }
 
     @Override
     public void onRefresh() {
+        asyncMakeData();
+    }
 
+    @Override
+    public void onPraiseClick() {
+        Toast.makeText(this, "You Click Praise!", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onCommentClick() {
+        Toast.makeText(this, "You Click Comment!", Toast.LENGTH_SHORT).show();
     }
 }

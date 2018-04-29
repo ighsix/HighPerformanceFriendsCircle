@@ -1,30 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/base_F8F8F8"
+    android:background="@color/base_F2F2F2"
     android:orientation="vertical"
-    android:padding="8dp">
+    android:paddingBottom="8dp"
+    android:paddingTop="8dp">
 
     <TextView
         android:id="@+id/praise_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="4dp"
         android:textColor="#697A9F"
-        android:textSize="16sp"/>
+        android:textSize="16sp" />
 
     <View
         android:id="@+id/view_line"
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:layout_marginBottom="4dp"
-        android:layout_marginTop="4dp"
-        android:background="#f0f0f0"/>
+        android:layout_marginBottom="6dp"
+        android:layout_marginTop="6dp"
+        android:background="@color/base_DCDCDC" />
 
-    <com.kcrason.highperformancefriendscircle.VerticalCommentWidget
+    <com.kcrason.highperformancefriendscircle.widgets.VerticalCommentWidget
         android:id="@+id/vertical_comment_widget"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"/>
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="4dp"
+        android:orientation="vertical" />
 </LinearLayout>

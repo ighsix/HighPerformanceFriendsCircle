@@ -1,4 +1,4 @@
-package com.kcrason.highperformancefriendscircle;
+package com.kcrason.highperformancefriendscircle.beans;
 
 import android.text.SpannableStringBuilder;
 
@@ -8,30 +8,52 @@ public class FriendCircleBean {
 
     private int viewType;
 
+    private String content;
+
+    private List<CommentBean> commentBeans;
+
+    private List<PraiseBean> praiseBeans;
+
+    private List<ImageBean> imageBeans;
+
+    private UserBean userBean;
+
+    private OtherInfoBean otherInfoBean;
+
+    private boolean isShowPraise;
+
+    private boolean isShowComment;
+
+    public boolean isShowComment() {
+        return isShowComment;
+    }
+
+    public boolean isShowPraise() {
+        return isShowPraise;
+    }
+
+    public OtherInfoBean getOtherInfoBean() {
+        return otherInfoBean;
+    }
+
+    public void setOtherInfoBean(OtherInfoBean otherInfoBean) {
+        this.otherInfoBean = otherInfoBean;
+    }
+
+    public void setUserBean(UserBean userBean) {
+        this.userBean = userBean;
+    }
+
+    public UserBean getUserBean() {
+        return userBean;
+    }
+
     public int getViewType() {
         return viewType;
     }
 
     public void setViewType(int viewType) {
         this.viewType = viewType;
-    }
-
-    private String userName;
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
     }
 
     public String getContent() {
@@ -47,6 +69,7 @@ public class FriendCircleBean {
     }
 
     public void setCommentBeans(List<CommentBean> commentBeans) {
+        isShowComment = commentBeans != null && commentBeans.size() > 0;
         this.commentBeans = commentBeans;
     }
 
@@ -55,6 +78,7 @@ public class FriendCircleBean {
     }
 
     public void setPraiseBeans(List<PraiseBean> praiseBeans) {
+        isShowPraise = praiseBeans != null && praiseBeans.size() > 0;
         this.praiseBeans = praiseBeans;
     }
 
@@ -66,15 +90,6 @@ public class FriendCircleBean {
         this.imageBeans = imageBeans;
     }
 
-    private String userId;
-
-    private String content;
-
-    private List<CommentBean> commentBeans;
-
-    private List<PraiseBean> praiseBeans;
-
-    private List<ImageBean> imageBeans;
 
     public SpannableStringBuilder getPraiseUserNameRichText() {
         return praiseUserNameRichText;

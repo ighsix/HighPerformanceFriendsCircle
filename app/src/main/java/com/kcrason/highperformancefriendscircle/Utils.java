@@ -5,11 +5,11 @@ import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
-import android.text.TextUtils;
-import android.text.style.ClickableSpan;
-import android.text.style.ImageSpan;
 import android.util.TypedValue;
-import android.view.View;
+
+import com.kcrason.highperformancefriendscircle.beans.PraiseBean;
+import com.kcrason.highperformancefriendscircle.span.TextClickSpan;
+import com.kcrason.highperformancefriendscircle.span.VerticalImageSpan;
 
 import java.util.List;
 
@@ -41,11 +41,14 @@ public class Utils {
                 if (i != praiseSize - 1) {
                     builder.append(",");
                 }
-                builder.setSpan(new UserNameClickableSpan(context, praiseUserName), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                builder.setSpan(new TextClickSpan(context, praiseUserName), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
-            Drawable drawable = ContextCompat.getDrawable(context, R.drawable.heart_drawable);
-            drawable.setBounds(0, 0, 50, 50);
-            builder.setSpan(new ImageSpan(drawable), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            Drawable drawable = ContextCompat.getDrawable(context, R.drawable.heart_drawable_blue);
+            if (drawable != null) {
+                int size = Utils.dp2px(context,16f);
+                drawable.setBounds(0, 0, size, size);
+            }
+            builder.setSpan(new VerticalImageSpan(drawable), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             return builder;
         }
         return null;

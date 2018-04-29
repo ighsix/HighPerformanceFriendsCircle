@@ -1,8 +1,7 @@
-package com.kcrason.highperformancefriendscircle;
+package com.kcrason.highperformancefriendscircle.adapters;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.util.TypedValue;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -10,6 +9,10 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
+import com.kcrason.highperformancefriendscircle.widgets.NineGridView;
+import com.kcrason.highperformancefriendscircle.R;
+import com.kcrason.highperformancefriendscircle.Utils;
+import com.kcrason.highperformancefriendscircle.beans.ImageBean;
 
 import java.util.List;
 
@@ -23,18 +26,18 @@ public class NineImageAdapter implements NineGridView.NineGridAdapter<ImageBean>
 
     private Context mContext;
 
-    private int mItemSize;
-
     private RequestOptions mRequestOptions;
-    private int mImageBackgroundColor = Color.parseColor("#f2f2f2");
+
+    private DrawableTransitionOptions mDrawableTransitionOptions;
 
 
-    public NineImageAdapter(Context context, List<ImageBean> imageBeans) {
+    public NineImageAdapter(Context context, RequestOptions requestOptions, DrawableTransitionOptions drawableTransitionOptions, List<ImageBean> imageBeans) {
         this.mContext = context;
-        this.mItemSize = (Utils.getScreenWidth(context) -
-                2 * Utils.dp2px(context, 4) - Utils.dp2px(context, 54)) /3;
-        this.mRequestOptions = new RequestOptions().centerCrop().override(mItemSize);
+        this.mDrawableTransitionOptions = drawableTransitionOptions;
         this.mImageBeans = imageBeans;
+        int itemSize = (Utils.getScreenWidth(context) -
+                2 * Utils.dp2px(context, 4) - Utils.dp2px(context, 54)) / 3;
+        this.mRequestOptions = requestOptions.override(itemSize, itemSize);
     }
 
     @Override
@@ -53,13 +56,13 @@ public class NineImageAdapter implements NineGridView.NineGridAdapter<ImageBean>
         ImageView imageView;
         if (itemView == null) {
             imageView = new ImageView(mContext);
-            imageView.setBackgroundColor(mImageBackgroundColor);
+            imageView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.base_F2F2F2));
             imageView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         } else {
             imageView = (ImageView) itemView;
         }
         String url = mImageBeans.get(position).getImageUrl();
-        Glide.with(mContext).load(url).apply(mRequestOptions).transition(DrawableTransitionOptions.withCrossFade()).into(imageView);
+        Glide.with(mContext).load(url).apply(mRequestOptions).transition(mDrawableTransitionOptions).into(imageView);
         return imageView;
     }
 }

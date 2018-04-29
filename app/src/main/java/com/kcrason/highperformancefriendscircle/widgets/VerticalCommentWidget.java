@@ -1,13 +1,17 @@
-package com.kcrason.highperformancefriendscircle;
+package com.kcrason.highperformancefriendscircle.widgets;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.text.SpannableStringBuilder;
-import android.text.method.LinkMovementMethod;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.kcrason.highperformancefriendscircle.R;
+import com.kcrason.highperformancefriendscircle.span.TextMovementMothod;
+import com.kcrason.highperformancefriendscircle.Utils;
+import com.kcrason.highperformancefriendscircle.beans.CommentBean;
 
 import java.util.List;
 
@@ -63,11 +67,12 @@ public class VerticalCommentWidget extends LinearLayout {
 
     private TextView createItemView(SpannableStringBuilder content) {
         TextView itemView = new TextView(getContext());
-        itemView.setMovementMethod(LinkMovementMethod.getInstance());
+        itemView.setMovementMethod(new TextMovementMothod());
         itemView.setPadding(0, mVerticalSpace, 0, mVerticalSpace);
         itemView.setTextSize(16f);
         itemView.setTextColor(ContextCompat.getColor(getContext(), R.color.base_333333));
         itemView.setText(content);
+        itemView.setBackgroundResource(R.drawable.selector_view_name_state);
         return itemView;
     }
 

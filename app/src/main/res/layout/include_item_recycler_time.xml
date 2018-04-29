@@ -1,21 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="40dp"
+    android:layout_height="42dp"
     android:gravity="center_vertical"
     android:orientation="horizontal">
 
-    <TextView android:textSize="14sp"
+    <TextView
+        android:id="@+id/txt_publish_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="8小时前  万恶资本源"/>
+        android:layout_centerVertical="true"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/txt_source"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@id/txt_publish_time"
+        android:textSize="12sp" />
+
 
     <ImageView
+        android:id="@+id/img_click_praise_or_comment"
         android:layout_width="20dp"
         android:layout_height="wrap_content"
-        app:srcCompat="@drawable/comment_drawable"
-        />
-</LinearLayout>
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        app:srcCompat="@drawable/comments_drawable_blue" />
+</RelativeLayout>

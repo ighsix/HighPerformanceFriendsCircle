@@ -1,4 +1,4 @@
-package com.kcrason.highperformancefriendscircle;
+package com.kcrason.highperformancefriendscircle.beans;
 
 import android.content.Context;
 import android.text.SpannableStringBuilder;

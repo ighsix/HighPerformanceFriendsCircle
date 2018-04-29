@@ -3,9 +3,14 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimary">@color/base_222230</item>
+        <item name="colorPrimaryDark">@color/base_222230</item>
         <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="PraiseOrCommentAnimationStyle">
+        <item name="android:windowEnterAnimation">@anim/anim_praise_or_comment_in</item>
+        <item name="android:windowExitAnimation">@anim/anim_praise_or_comment_out</item>
     </style>
 
 </resources>

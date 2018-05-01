@@ -24,6 +24,17 @@ public class FriendCircleBean {
 
     private boolean isShowComment;
 
+
+    private boolean isShowContentTranslation;
+
+    public boolean isShowContentTranslation() {
+        return isShowContentTranslation;
+    }
+
+    public void setShowContentTranslation(boolean showContentTranslation) {
+        isShowContentTranslation = showContentTranslation;
+    }
+
     public boolean isShowComment() {
         return isShowComment;
     }
@@ -60,8 +71,20 @@ public class FriendCircleBean {
         return content;
     }
 
+    public SpannableStringBuilder getContentSpan() {
+        return contentSpan;
+    }
+
+    public void setContentSpan(SpannableStringBuilder contentSpan) {
+        this.contentSpan = contentSpan;
+    }
+
+    private SpannableStringBuilder contentSpan;
+
+
     public void setContent(String content) {
         this.content = content;
+        setContentSpan(new SpannableStringBuilder(content));
     }
 
     public List<CommentBean> getCommentBeans() {

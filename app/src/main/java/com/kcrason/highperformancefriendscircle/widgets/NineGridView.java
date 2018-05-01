@@ -26,10 +26,10 @@ public class NineGridView extends ViewGroup {
 
     public NineGridView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        initView(context, attrs);
+        initView(context);
     }
 
-    private void initView(Context context, AttributeSet attrs) {
+    private void initView(Context context) {
         mSpace = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
                 4f, context.getResources().getDisplayMetrics());
     }
@@ -44,7 +44,7 @@ public class NineGridView extends ViewGroup {
 
     public void setAdapter(NineGridAdapter adapter) {
         if (adapter == null || adapter.getCount() <= 0) {
-            removeAllViews(); // 避免listview复用显示脏数据
+            removeAllViews();
             return;
         }
         mAdapter = adapter;
@@ -83,12 +83,12 @@ public class NineGridView extends ViewGroup {
         int count = adapter.getCount();
         for (int i = 0; i < count; i++) {
             boolean hasChild = i < childCount;
-            // 简单的回收机制,主要是为ListView做优化
+            // 简单的回收机制,主要是为ListView/RecyclerView做优化
             View recycleView = hasChild ? getChildAt(i) : null;
             View child = adapter.getView(i, recycleView);
 
             if (child != recycleView) {
-                if (hasChild) { // 为了防止有的逗比不复用RecycleView做处理
+                if (hasChild) {
                     removeView(recycleView);
                 }
                 addViewInLayout(child,i,child.getLayoutParams(),true);
@@ -169,12 +169,9 @@ public class NineGridView extends ViewGroup {
             int bottom = top + mChildHeight;
             view.layout(left, top, right, bottom);
             final int position = i;
-            view.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mListener != null) {
-                        mListener.onImageClick(position, v);
-                    }
+            view.setOnClickListener(v -> {
+                if (mListener != null) {
+                    mListener.onImageClick(position, v);
                 }
             });
         }

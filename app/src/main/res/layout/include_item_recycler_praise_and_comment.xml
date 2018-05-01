@@ -5,6 +5,7 @@
     android:background="@color/base_F2F2F2"
     android:orientation="vertical"
     android:paddingBottom="8dp"
+    android:id="@+id/layout_praise_and_comment"
     android:paddingTop="8dp">
 
     <TextView

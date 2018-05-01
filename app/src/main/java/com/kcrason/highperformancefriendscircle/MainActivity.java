@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mFriendCircleAdapter = new FriendCircleAdapter(this);
+        mFriendCircleAdapter = new FriendCircleAdapter(this, mRecyclerView);
         mRecyclerView.setAdapter(mFriendCircleAdapter);
         asyncMakeData();
     }
@@ -87,6 +87,11 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             friendCircleBean.setPraiseBeans(praiseBeans);
             friendCircleBean.setContent(Constants.CONTENT[(int) (Math.random() * 10)]);
 
+//            if (((int) (Math.random() * 1000)) % 2 == 0) {
+//                friendCircleBean.setShowContentTranslation(true);
+//            } else {
+//                friendCircleBean.setShowContentTranslation(false);
+//            }
 
             UserBean userBean = new UserBean();
             userBean.setUserName(Constants.USER_NAME[(int) (Math.random() * 30)]);
@@ -126,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     private List<PraiseBean> makePraiseBeans() {
         List<PraiseBean> praiseBeans = new ArrayList<>();
-        int randomCount = (int) (Math.random() * 3);
+        int randomCount = (int) (Math.random() * 10);
         for (int i = 0; i < randomCount; i++) {
             PraiseBean praiseBean = new PraiseBean();
             praiseBean.setPraiseUserName(Constants.USER_NAME[(int) (Math.random() * 30)]);
@@ -138,7 +143,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     private List<CommentBean> makeCommentBeans() {
         List<CommentBean> commentBeans = new ArrayList<>();
-        int randomCount = (int) (Math.random() * 30);
+        int randomCount = (int) (Math.random() * 5);
         for (int i = 0; i < randomCount; i++) {
             CommentBean commentBean = new CommentBean();
             if ((int) (Math.random() * 100) % 2 == 0) {
@@ -149,6 +154,11 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 commentBean.setChildUserName(Constants.USER_NAME[(int) (Math.random() * 30)]);
                 commentBean.setParentUserName(Constants.USER_NAME[(int) (Math.random() * 30)]);
             }
+//            if (((int) (Math.random() * 1000)) % 2 == 0) {
+//                commentBean.setShowContentTranslation(true);
+//            } else {
+//                commentBean.setShowContentTranslation(false);
+//            }
             commentBean.setCommentContent(Constants.COMMENT_CONTENT[(int) (Math.random() * 30)]);
             commentBean.build(this);
             commentBeans.add(commentBean);

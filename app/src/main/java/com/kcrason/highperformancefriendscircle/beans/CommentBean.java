@@ -22,6 +22,15 @@ public class CommentBean {
 
     private String commentContent;
 
+    private boolean isShowContentTranslation;
+
+    public boolean isShowContentTranslation() {
+        return isShowContentTranslation;
+    }
+
+    public void setShowContentTranslation(boolean showContentTranslation) {
+        isShowContentTranslation = showContentTranslation;
+    }
 
 
     public int getCommentType() {
@@ -69,10 +78,8 @@ public class CommentBean {
     }
 
     public void setCommentContent(String commentContent) {
-        this.commentContent = commentContent;
+        this.commentContent = String.format(" %s", commentContent);
     }
-
-
 
 
     /**

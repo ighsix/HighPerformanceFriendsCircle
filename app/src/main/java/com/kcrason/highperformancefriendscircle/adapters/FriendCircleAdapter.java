@@ -18,9 +18,11 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
 import com.kcrason.highperformancefriendscircle.Constants;
+import com.kcrason.highperformancefriendscircle.TimerUtils;
 import com.kcrason.highperformancefriendscircle.enums.TranslationState;
 import com.kcrason.highperformancefriendscircle.interfaces.OnItemClickPopupMenuListener;
 import com.kcrason.highperformancefriendscircle.interfaces.OnPraiseOrCommentClickListener;
+import com.kcrason.highperformancefriendscircle.interfaces.OnTimerResultListener;
 import com.kcrason.highperformancefriendscircle.widgets.CommentOrPraisePopupWindow;
 import com.kcrason.highperformancefriendscircle.widgets.NineGridView;
 import com.kcrason.highperformancefriendscircle.R;
@@ -158,42 +160,39 @@ public class FriendCircleAdapter extends RecyclerView.Adapter<FriendCircleAdapte
 
         if (friendCircleBean.isShowPraise() || friendCircleBean.isShowComment()) {
             holder.layoutPraiseAndComment.setVisibility(View.VISIBLE);
+            if (friendCircleBean.isShowComment() && friendCircleBean.isShowPraise()) {
+                holder.viewLine.setVisibility(View.VISIBLE);
+            } else {
+                holder.viewLine.setVisibility(View.GONE);
+            }
             if (friendCircleBean.isShowPraise()) {
                 holder.txtPraiseContent.setVisibility(View.VISIBLE);
                 holder.txtPraiseContent.setText(friendCircleBean.getPraiseSpan());
             } else {
                 holder.txtPraiseContent.setVisibility(View.GONE);
             }
-
             if (friendCircleBean.isShowComment()) {
-                if (friendCircleBean.isShowPraise()) {
-                    holder.viewLine.setVisibility(View.VISIBLE);
-                } else {
-                    holder.viewLine.setVisibility(View.GONE);
-                }
                 holder.verticalCommentWidget.addComments(friendCircleBean.getCommentBeans(), false);
             } else {
                 holder.viewLine.setVisibility(View.GONE);
             }
-
-            holder.imgPraiseOrComment.setOnClickListener(v -> {
-                if (mContext instanceof Activity) {
-                    if (mCommentOrPraisePopupWindow == null) {
-                        mCommentOrPraisePopupWindow = new CommentOrPraisePopupWindow.Builder(mContext)
-                                .setOnPraiseOrCommentClickListener(mOnPraiseOrCommentClickListener).build();
-                    }
-                    if (mCommentOrPraisePopupWindow.isShowing()) {
-                        mCommentOrPraisePopupWindow.dismiss();
-                    } else {
-                        mCommentOrPraisePopupWindow.showPopupWindow(v);
-                    }
-                }
-            });
-
         } else {
             holder.layoutPraiseAndComment.setVisibility(View.GONE);
         }
 
+        holder.imgPraiseOrComment.setOnClickListener(v -> {
+            if (mContext instanceof Activity) {
+                if (mCommentOrPraisePopupWindow == null) {
+                    mCommentOrPraisePopupWindow = new CommentOrPraisePopupWindow.Builder(mContext)
+                            .setOnPraiseOrCommentClickListener(mOnPraiseOrCommentClickListener).build();
+                }
+                if (mCommentOrPraisePopupWindow.isShowing()) {
+                    mCommentOrPraisePopupWindow.dismiss();
+                } else {
+                    mCommentOrPraisePopupWindow.showPopupWindow(v);
+                }
+            }
+        });
 
         holder.txtLocation.setOnClickListener(v -> Toast.makeText(mContext, "You Click Location", Toast.LENGTH_SHORT).show());
     }
@@ -220,7 +219,12 @@ public class FriendCircleAdapter extends RecyclerView.Adapter<FriendCircleAdapte
         if (mFriendCircleBeans != null && position < mFriendCircleBeans.size()) {
             mFriendCircleBeans.get(position).setTranslationState(TranslationState.CENTER);
             notifyTargetItemView(position, TranslationState.CENTER, null);
-            timerTranslation(position);
+            TimerUtils.timerTranslation(() -> {
+                if (mFriendCircleBeans != null && position < mFriendCircleBeans.size()) {
+                    mFriendCircleBeans.get(position).setTranslationState(TranslationState.END);
+                    notifyTargetItemView(position, TranslationState.END, mFriendCircleBeans.get(position).getContentSpan());
+                }
+            });
         }
     }
 
@@ -232,16 +236,6 @@ public class FriendCircleAdapter extends RecyclerView.Adapter<FriendCircleAdapte
         }
     }
 
-    @SuppressLint("CheckResult")
-    private void timerTranslation(final int position) {
-        Single.timer(1000, TimeUnit.MILLISECONDS)
-                .observeOn(AndroidSchedulers.mainThread()).subscribe(aLong -> {
-            if (mFriendCircleBeans != null && position < mFriendCircleBeans.size()) {
-                mFriendCircleBeans.get(position).setTranslationState(TranslationState.END);
-                notifyTargetItemView(position, TranslationState.END, mFriendCircleBeans.get(position).getContentSpan());
-            }
-        });
-    }
 
 
     private void updateTargetItemContent(int position, BaseFriendCircleViewHolder baseFriendCircleViewHolder,

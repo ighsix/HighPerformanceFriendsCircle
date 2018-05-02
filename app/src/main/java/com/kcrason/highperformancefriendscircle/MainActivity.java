@@ -33,8 +33,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         OnPraiseOrCommentClickListener {
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
-
-    private RecyclerView mRecyclerView;
     private Disposable mDisposable;
     private FriendCircleAdapter mFriendCircleAdapter;
 
@@ -43,10 +41,10 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mSwipeRefreshLayout = findViewById(R.id.swpie_refresh_layout);
-        mRecyclerView = findViewById(R.id.recycler_view);
+        RecyclerView recyclerView = findViewById(R.id.recycler_view);
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
-        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
@@ -63,10 +61,10 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             }
         });
 
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mRecyclerView.addItemDecoration(new FriendsCircleAdapterDivideLine(this));
-        mFriendCircleAdapter = new FriendCircleAdapter(this, mRecyclerView);
-        mRecyclerView.setAdapter(mFriendCircleAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.addItemDecoration(new FriendsCircleAdapterDivideLine(this));
+        mFriendCircleAdapter = new FriendCircleAdapter(this, recyclerView);
+        recyclerView.setAdapter(mFriendCircleAdapter);
         Utils.showSwipeRefreshLayout(mSwipeRefreshLayout, this::asyncMakeData);
     }
 

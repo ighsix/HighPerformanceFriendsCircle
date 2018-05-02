@@ -97,7 +97,6 @@ public class Utils {
                 }
                 return true;
             });
-
             popup.show(); //showing popup menu
         }
     }
@@ -110,5 +109,4 @@ public class Utils {
             valueAnimator.setDuration(500).start();
         }
     }
-
 }

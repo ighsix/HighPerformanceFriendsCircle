@@ -1,7 +1,6 @@
 package com.kcrason.highperformancefriendscircle;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -20,7 +19,7 @@ import java.util.List;
 public class SpanUtils {
 
     public static SpannableStringBuilder makeSingleCommentSpan(Context context, String childUserName, String commentContent) {
-        String richText = String.format("%s:%s", childUserName, commentContent);
+        String richText = String.format("%s: %s", childUserName, commentContent);
         SpannableStringBuilder builder = new SpannableStringBuilder(richText);
         if (!TextUtils.isEmpty(childUserName)) {
             builder.setSpan(new TextClickSpan(context, childUserName), 0, childUserName.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -29,7 +28,7 @@ public class SpanUtils {
     }
 
     public static SpannableStringBuilder makeReplyCommentSpan(Context context, String parentUserName, String childUserName, String commentContent) {
-        String richText = String.format("%s回复%s:%s", parentUserName, childUserName, commentContent);
+        String richText = String.format("%s回复%s: %s", parentUserName, childUserName, commentContent);
         SpannableStringBuilder builder = new SpannableStringBuilder(richText);
         int parentEnd = 0;
         if (!TextUtils.isEmpty(parentUserName)) {
@@ -60,12 +59,8 @@ public class SpanUtils {
                 }
                 builder.setSpan(new TextClickSpan(context, praiseUserName), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
-            Drawable drawable = ContextCompat.getDrawable(context, R.drawable.heart_drawable_blue);
-            if (drawable != null) {
-                int size = Utils.dp2px(context, 15f);
-                drawable.setBounds(0, 0, size, size);
-            }
-            builder.setSpan(new VerticalImageSpan(drawable), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            builder.setSpan(new VerticalImageSpan(context, ContextCompat.getDrawable(context, R.drawable.heart_drawable_blue)),
+                    0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             return builder;
         }
         return null;

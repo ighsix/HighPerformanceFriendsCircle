@@ -1,14 +1,23 @@
 package com.kcrason.highperformancefriendscircle.span;
 
+import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.text.style.ImageSpan;
 
+import com.kcrason.highperformancefriendscircle.Utils;
+
 public class VerticalImageSpan extends ImageSpan {
-    public VerticalImageSpan(Drawable drawable) {
+    private Drawable mDrawable;
+
+    private int mDrawableSize;
+
+    public VerticalImageSpan(Context context, Drawable drawable) {
         super(drawable);
+        this.mDrawable = drawable;
+        this.mDrawableSize = Utils.dp2px(context, 15f);
     }
 
     /**
@@ -33,18 +42,24 @@ public class VerticalImageSpan extends ImageSpan {
         return rect.right;
     }
 
+    @Override
+    public Drawable getDrawable() {
+        mDrawable.setBounds(0, 0, mDrawableSize, mDrawableSize);
+        return mDrawable;
+    }
+
     /**
      * see detail message in android.text.TextLine
      *
      * @param canvas the canvas, can be null if not rendering
-     * @param text the text to be draw
-     * @param start the text start position
-     * @param end the text end position
-     * @param x the edge of the replacement closest to the leading margin
-     * @param top the top of the line
-     * @param y the baseline
+     * @param text   the text to be draw
+     * @param start  the text start position
+     * @param end    the text end position
+     * @param x      the edge of the replacement closest to the leading margin
+     * @param top    the top of the line
+     * @param y      the baseline
      * @param bottom the bottom of the line
-     * @param paint the work paint
+     * @param paint  the work paint
      */
     @Override
     public void draw(Canvas canvas, CharSequence text, int start, int end,

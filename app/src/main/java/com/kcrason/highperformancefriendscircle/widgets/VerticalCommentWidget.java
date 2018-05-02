@@ -1,6 +1,5 @@
 package com.kcrason.highperformancefriendscircle.widgets;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -13,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kcrason.highperformancefriendscircle.R;
+import com.kcrason.highperformancefriendscircle.TimerUtils;
 import com.kcrason.highperformancefriendscircle.enums.TranslationState;
 import com.kcrason.highperformancefriendscircle.interfaces.OnItemClickPopupMenuListener;
 import com.kcrason.highperformancefriendscircle.Utils;
@@ -21,10 +21,6 @@ import com.kcrason.highperformancefriendscircle.beans.CommentBean;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Array;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
-
-import io.reactivex.Single;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 
 /**
  * @author KCrason
@@ -213,20 +209,15 @@ public class VerticalCommentWidget extends LinearLayout implements ViewGroup.OnH
         if (mCommentBeans != null && position < mCommentBeans.size()) {
             mCommentBeans.get(position).setTranslationState(TranslationState.CENTER);
             updateTargetComment(position, mCommentBeans);
-            timerTranslation(position);
+            TimerUtils.timerTranslation(() -> {
+                if (mCommentBeans != null && position < mCommentBeans.size()) {
+                    mCommentBeans.get(position).setTranslationState(TranslationState.END);
+                    updateTargetComment(position, mCommentBeans);
+                }
+            });
         }
     }
 
-    @SuppressLint("CheckResult")
-    private void timerTranslation(final int position) {
-        Single.timer(1000, TimeUnit.MILLISECONDS)
-                .observeOn(AndroidSchedulers.mainThread()).subscribe(aLong -> {
-            if (mCommentBeans != null && position < mCommentBeans.size()) {
-                mCommentBeans.get(position).setTranslationState(TranslationState.END);
-                updateTargetComment(position, mCommentBeans);
-            }
-        });
-    }
 
     @Override
     public void onItemClickHideTranslation(int position) {

@@ -63,6 +63,8 @@ public class DataCenter {
         int randomCount = (int) (Math.random() * 9);
         if (randomCount == 0) {
             randomCount = randomCount + 1;
+        } else if (randomCount == 8) {
+            randomCount = randomCount + 1;
         }
         for (int i = 0; i < randomCount; i++) {
             ImageBean imageBean = new ImageBean();
@@ -75,7 +77,7 @@ public class DataCenter {
 
     private static List<PraiseBean> makePraiseBeans() {
         List<PraiseBean> praiseBeans = new ArrayList<>();
-        int randomCount = (int) (Math.random() * 10);
+        int randomCount = (int) (Math.random() * 20);
         for (int i = 0; i < randomCount; i++) {
             PraiseBean praiseBean = new PraiseBean();
             praiseBean.setPraiseUserName(Constants.USER_NAME[(int) (Math.random() * 30)]);
@@ -87,7 +89,7 @@ public class DataCenter {
 
     private static List<CommentBean> makeCommentBeans(Context context) {
         List<CommentBean> commentBeans = new ArrayList<>();
-        int randomCount = (int) (Math.random() * 5);
+        int randomCount = (int) (Math.random() * 20);
         for (int i = 0; i < randomCount; i++) {
             CommentBean commentBean = new CommentBean();
             if ((int) (Math.random() * 100) % 2 == 0) {

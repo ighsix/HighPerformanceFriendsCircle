@@ -79,7 +79,7 @@ public class CommentBean {
     }
 
     public void setCommentContent(String commentContent) {
-        this.commentContent = String.format(" %s", commentContent);
+        this.commentContent = commentContent;
     }
 
 

@@ -1,6 +1,5 @@
 package com.kcrason.highperformancefriendscircle.widgets;
 
-import android.animation.ValueAnimator;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.text.SpannableStringBuilder;
@@ -101,21 +100,12 @@ public class CommentTranslationLayoutView extends LinearLayout implements View.O
     }
 
 
-    public TextView getTxtSourceContent() {
-        return mTxtSourceContent;
-    }
-
-    public int getCurrentPosition() {
-        return mCurrentPosition;
-    }
-
     public CommentTranslationLayoutView setTranslationContent(SpannableStringBuilder builder) {
         if (mTxtTranslationContent != null) {
             mTxtTranslationContent.setText(builder);
         }
         return this;
     }
-
 
     @Override
     public boolean onLongClick(View v) {

@@ -2,6 +2,8 @@ package com.kcrason.highperformancefriendscircle.beans;
 
 import android.text.SpannableStringBuilder;
 
+import com.kcrason.highperformancefriendscircle.enums.TranslationState;
+
 import java.util.List;
 
 public class FriendCircleBean {
@@ -24,15 +26,14 @@ public class FriendCircleBean {
 
     private boolean isShowComment;
 
+    private TranslationState translationState = TranslationState.START;
 
-    private boolean isShowContentTranslation;
-
-    public boolean isShowContentTranslation() {
-        return isShowContentTranslation;
+    public void setTranslationState(TranslationState translationState) {
+        this.translationState = translationState;
     }
 
-    public void setShowContentTranslation(boolean showContentTranslation) {
-        isShowContentTranslation = showContentTranslation;
+    public TranslationState getTranslationState() {
+        return translationState;
     }
 
     public boolean isShowComment() {
@@ -114,15 +115,15 @@ public class FriendCircleBean {
     }
 
 
-    public SpannableStringBuilder getPraiseUserNameRichText() {
-        return praiseUserNameRichText;
+    public void setPraiseSpan(SpannableStringBuilder praiseSpan) {
+        this.praiseSpan = praiseSpan;
     }
 
-    public void setPraiseUserNameRichText(SpannableStringBuilder praiseUserNameRichText) {
-        this.praiseUserNameRichText = praiseUserNameRichText;
+    public SpannableStringBuilder getPraiseSpan() {
+        return praiseSpan;
     }
 
-    private SpannableStringBuilder praiseUserNameRichText;
+    private SpannableStringBuilder praiseSpan;
 
 
 }

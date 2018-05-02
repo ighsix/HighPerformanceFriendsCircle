@@ -1,13 +1,13 @@
 package com.kcrason.highperformancefriendscircle.widgets;
 
+import android.animation.ValueAnimator;
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.text.SpannableStringBuilder;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -21,45 +21,64 @@ public class CommentTranslationLayoutView extends LinearLayout implements View.O
 
     private TextView mTxtSourceContent;
     private TextView mTxtTranslationContent;
-    private LinearLayout mLayoutTranslation;
+    private ImageView mTranslationTag;
+    private View mDivideLine;
+    private TextView mTranslationDesc;
+
     private OnItemClickPopupMenuListener mOnItemClickPopupMenuListener;
     private int mCurrentPosition;
 
     public CommentTranslationLayoutView(Context context) {
         super(context);
-        init(context, null);
+        init(context);
     }
 
     public CommentTranslationLayoutView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        init(context, attrs);
+        init(context);
     }
 
     public CommentTranslationLayoutView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init(context, attrs);
+        init(context);
     }
 
 
-    private void init(Context context, AttributeSet set) {
+    private void init(Context context) {
         View itemView = LayoutInflater.from(context).inflate(R.layout.view_comment_translation_layout, this, false);
-        mLayoutTranslation = itemView.findViewById(R.id.layout_translation);
+        mDivideLine = itemView.findViewById(R.id.view_divide_line);
+        mTranslationTag = itemView.findViewById(R.id.img_translating);
+        mTranslationDesc = itemView.findViewById(R.id.txt_translation_desc);
         mTxtSourceContent = itemView.findViewById(R.id.txt_source_content);
-        mTxtSourceContent.setOnLongClickListener(v -> {
-            Utils.showPopupMenu(getContext(), mOnItemClickPopupMenuListener, mCurrentPosition, v, TranslationState.END);
-            return false;
-        });
+        mTxtSourceContent.setOnLongClickListener(this);
         mTxtSourceContent.setMovementMethod(new TextMovementMothod());
         mTxtTranslationContent = itemView.findViewById(R.id.txt_translation_content);
-        mTxtTranslationContent.setOnLongClickListener(v -> {
-            Utils.showPopupMenu(getContext(), mOnItemClickPopupMenuListener, mCurrentPosition, v, TranslationState.END);
-            return false;
-        });
+        mTxtTranslationContent.setOnLongClickListener(this);
         mTxtTranslationContent.setMovementMethod(new TextMovementMothod());
         setBackgroundResource(R.drawable.selector_view_name_state);
         mTxtSourceContent.setBackgroundResource(R.drawable.selector_view_name_state);
         mTxtTranslationContent.setBackgroundResource(R.drawable.selector_view_name_state);
         addView(itemView);
+    }
+
+    public CommentTranslationLayoutView setTranslationState(TranslationState translationState, boolean isStartAnimation) {
+        switch (translationState) {
+            case CENTER:
+                mTranslationTag.setVisibility(VISIBLE);
+                mDivideLine.setVisibility(GONE);
+                mTranslationDesc.setText("翻译中");
+                mTxtTranslationContent.setVisibility(GONE);
+                Utils.startAlphaAnimation(mTranslationDesc, isStartAnimation);
+                break;
+            case END:
+                mTranslationTag.setVisibility(GONE);
+                mDivideLine.setVisibility(VISIBLE);
+                mTranslationDesc.setText("已翻译");
+                mTxtTranslationContent.setVisibility(VISIBLE);
+                Utils.startAlphaAnimation(mTxtTranslationContent, isStartAnimation);
+                break;
+        }
+        return this;
     }
 
     public CommentTranslationLayoutView setOnItemClickPopupMenuListener(OnItemClickPopupMenuListener mOnItemClickPopupMenuListener) {
@@ -73,34 +92,21 @@ public class CommentTranslationLayoutView extends LinearLayout implements View.O
         return this;
     }
 
-    public CommentTranslationLayoutView setShowTranslationLayout(boolean isShow) {
-        if (isShow) {
-            showTranslationLayout();
-        } else {
-            hideTranslationLayout();
-        }
-        return this;
-    }
-
-
-    public void showTranslationLayout() {
-        if (mLayoutTranslation != null) {
-            mLayoutTranslation.setVisibility(VISIBLE);
-        }
-    }
-
-    public void hideTranslationLayout() {
-        if (mLayoutTranslation != null) {
-            mLayoutTranslation.setVisibility(GONE);
-        }
-    }
-
 
     public CommentTranslationLayoutView setSourceContent(SpannableStringBuilder builder) {
         if (mTxtSourceContent != null) {
             mTxtSourceContent.setText(builder);
         }
         return this;
+    }
+
+
+    public TextView getTxtSourceContent() {
+        return mTxtSourceContent;
+    }
+
+    public int getCurrentPosition() {
+        return mCurrentPosition;
     }
 
     public CommentTranslationLayoutView setTranslationContent(SpannableStringBuilder builder) {
@@ -114,7 +120,9 @@ public class CommentTranslationLayoutView extends LinearLayout implements View.O
     @Override
     public boolean onLongClick(View v) {
         switch (v.getId()) {
+            case R.id.txt_source_content:
             case R.id.txt_translation_content:
+                Utils.showPopupMenu(getContext(), mOnItemClickPopupMenuListener, mCurrentPosition, v, TranslationState.END);
                 break;
             default:
                 break;

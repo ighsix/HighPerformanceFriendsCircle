@@ -6,6 +6,8 @@ import android.text.Spanned;
 import android.text.TextUtils;
 
 import com.kcrason.highperformancefriendscircle.Constants;
+import com.kcrason.highperformancefriendscircle.SpanUtils;
+import com.kcrason.highperformancefriendscircle.enums.TranslationState;
 import com.kcrason.highperformancefriendscircle.span.TextClickSpan;
 
 public class CommentBean {
@@ -22,16 +24,15 @@ public class CommentBean {
 
     private String commentContent;
 
-    private boolean isShowContentTranslation;
+    private TranslationState translationState = TranslationState.START;
 
-    public boolean isShowContentTranslation() {
-        return isShowContentTranslation;
+    public void setTranslationState(TranslationState translationState) {
+        this.translationState = translationState;
     }
 
-    public void setShowContentTranslation(boolean showContentTranslation) {
-        isShowContentTranslation = showContentTranslation;
+    public TranslationState getTranslationState() {
+        return translationState;
     }
-
 
     public int getCommentType() {
         return commentType;
@@ -85,44 +86,17 @@ public class CommentBean {
     /**
      * 富文本内容
      */
-    private SpannableStringBuilder richTextCommentContent;
+    private SpannableStringBuilder commentContentSpan;
+
+    public SpannableStringBuilder getCommentContentSpan() {
+        return commentContentSpan;
+    }
 
     public void build(Context context) {
         if (commentType == Constants.CommentType.COMMENT_TYPE_SINGLE) {
-            richTextCommentContent = makeSingleCommentRichText(context, childUserName, commentContent);
+            commentContentSpan = SpanUtils.makeSingleCommentSpan(context, childUserName, commentContent);
         } else {
-            richTextCommentContent = makeReplyCommentRichText(context, parentUserName, childUserName, commentContent);
+            commentContentSpan = SpanUtils.makeReplyCommentSpan(context, parentUserName, childUserName, commentContent);
         }
     }
-
-    public SpannableStringBuilder getRichTextCommentContent() {
-        return richTextCommentContent;
-    }
-
-    public static SpannableStringBuilder makeSingleCommentRichText(Context context, String childUserName, String commentContent) {
-        String richText = String.format("%s:%s", childUserName, commentContent);
-        SpannableStringBuilder builder = new SpannableStringBuilder(richText);
-        if (!TextUtils.isEmpty(childUserName)) {
-            builder.setSpan(new TextClickSpan(context, childUserName), 0, childUserName.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        }
-        return builder;
-    }
-
-
-    public static SpannableStringBuilder makeReplyCommentRichText(Context context, String parentUserName, String childUserName, String commentContent) {
-        String richText = String.format("%s回复%s:%s", parentUserName, childUserName, commentContent);
-        SpannableStringBuilder builder = new SpannableStringBuilder(richText);
-        int parentEnd = 0;
-        if (!TextUtils.isEmpty(parentUserName)) {
-            parentEnd = parentUserName.length();
-            builder.setSpan(new TextClickSpan(context, parentUserName), 0, parentEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        }
-        if (!TextUtils.isEmpty(childUserName)) {
-            int childStart = parentEnd + 2;
-            int childEnd = childStart + childUserName.length();
-            builder.setSpan(new TextClickSpan(context, childUserName), childStart, childEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        }
-        return builder;
-    }
-
 }

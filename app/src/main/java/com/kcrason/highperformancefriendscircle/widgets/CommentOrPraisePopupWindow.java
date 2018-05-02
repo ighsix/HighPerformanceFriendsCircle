@@ -40,7 +40,6 @@ public class CommentOrPraisePopupWindow extends PopupWindow implements View.OnCl
         this.update();
         // 实例化一个ColorDrawable颜色为半透明
         ColorDrawable dw = new ColorDrawable(0x00000000);
-        // 点back键和其他地方使其消失,设置了这个才能触发OnDismisslistener ，设置其他控件变化等操作
         this.setBackgroundDrawable(dw);
     }
 

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.text.SpannableStringBuilder;
+import android.text.method.LinkMovementMethod;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import com.kcrason.highperformancefriendscircle.enums.TranslationState;
 import com.kcrason.highperformancefriendscircle.interfaces.OnItemClickPopupMenuListener;
 import com.kcrason.highperformancefriendscircle.Utils;
 import com.kcrason.highperformancefriendscircle.beans.CommentBean;
+import com.kcrason.highperformancefriendscircle.span.TextMovementMothod;
 
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Array;
@@ -71,7 +73,7 @@ public class VerticalCommentWidget extends LinearLayout implements ViewGroup.OnH
                 if (childView == null) {
                     childView = COMMENT_TEXT_POOL.get();
                     if (childView == null) {
-                        addViewInLayout(makeCommentItemView(commentSpan, i, translationState, isStartAnimation), i, generateDefaultLayoutParams(), true);
+                        addViewInLayout(makeCommentItemView(commentSpan, i, translationState, isStartAnimation), i, generateMarginLayoutParams(i), true);
                     } else {
                         addCommentItemView(childView, commentSpan, i, translationState, isStartAnimation);
                     }
@@ -128,19 +130,19 @@ public class VerticalCommentWidget extends LinearLayout implements ViewGroup.OnH
     private void addCommentItemView(View view, SpannableStringBuilder builder, int index, TranslationState translationState, boolean isStartAnimation) {
         if (view instanceof CommentTranslationLayoutView) {
             if (translationState == TranslationState.START) {
-                addViewInLayout(makeCommentItemView(builder, index, translationState, isStartAnimation), index, generateDefaultLayoutParams(), true);
+                addViewInLayout(makeCommentItemView(builder, index, translationState, isStartAnimation), index, generateMarginLayoutParams(index), true);
             } else {
                 CommentTranslationLayoutView translationLayoutView = (CommentTranslationLayoutView) view;
                 translationLayoutView.setOnItemClickPopupMenuListener(this).setCurrentPosition(index).setSourceContent(builder).setTranslationContent(builder);
-                addViewInLayout(translationLayoutView, index, generateDefaultLayoutParams(), true);
+                addViewInLayout(translationLayoutView, index, generateMarginLayoutParams(index), true);
             }
         } else if (view instanceof TextView) {
             if (translationState == TranslationState.START) {
                 ((TextView) view).setText(builder);
                 addOnItemClickPopupMenuListener(view, index, TranslationState.START);
-                addViewInLayout(view, index, generateDefaultLayoutParams(), true);
+                addViewInLayout(view, index, generateMarginLayoutParams(index), true);
             } else {
-                addViewInLayout(makeCommentItemView(builder, index, translationState, isStartAnimation), index, generateDefaultLayoutParams(), true);
+                addViewInLayout(makeCommentItemView(builder, index, translationState, isStartAnimation), index, generateMarginLayoutParams(index), true);
             }
         }
     }
@@ -159,7 +161,7 @@ public class VerticalCommentWidget extends LinearLayout implements ViewGroup.OnH
     private void updateCommentData(View view, SpannableStringBuilder builder, int index, TranslationState translationState, boolean isStartAnimation) {
         if (view instanceof CommentTranslationLayoutView) {
             if (translationState == TranslationState.START) {
-                addViewInLayout(makeCommentItemView(builder, index, translationState, isStartAnimation), index, generateDefaultLayoutParams(), true);
+                addViewInLayout(makeCommentItemView(builder, index, translationState, isStartAnimation), index, generateMarginLayoutParams(index), true);
                 removeViewInLayout(view);
             } else {
                 CommentTranslationLayoutView translationLayoutView = (CommentTranslationLayoutView) view;
@@ -172,7 +174,7 @@ public class VerticalCommentWidget extends LinearLayout implements ViewGroup.OnH
             if (translationState == TranslationState.START) {
                 ((TextView) view).setText(builder);
             } else {
-                addViewInLayout(makeCommentItemView(builder, index, translationState, isStartAnimation), index, generateDefaultLayoutParams(), true);
+                addViewInLayout(makeCommentItemView(builder, index, translationState, isStartAnimation), index, generateMarginLayoutParams(index), true);
                 removeViewInLayout(view);
             }
         }
@@ -183,10 +185,19 @@ public class VerticalCommentWidget extends LinearLayout implements ViewGroup.OnH
         textView.setTextColor(ContextCompat.getColor(getContext(), R.color.base_333333));
         textView.setBackgroundResource(R.drawable.selector_view_name_state);
         textView.setTextSize(16f);
-        textView.setText(content);
         textView.setLineSpacing(Utils.dp2px(getContext(), 3f), 1f);
+        textView.setText(content);
+        textView.setMovementMethod(new TextMovementMothod());
         addOnItemClickPopupMenuListener(textView, index, TranslationState.START);
         return textView;
+    }
+
+    private LayoutParams generateMarginLayoutParams(int index) {
+        LinearLayout.LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        if (mCommentBeans != null) {
+            layoutParams.bottomMargin = index == mCommentBeans.size() - 1 ? 0 : Utils.dp2px(getContext(), 6f);
+        }
+        return layoutParams;
     }
 
     @Override

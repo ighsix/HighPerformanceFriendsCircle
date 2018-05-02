@@ -172,9 +172,10 @@ public class FriendCircleAdapter extends RecyclerView.Adapter<FriendCircleAdapte
                 holder.txtPraiseContent.setVisibility(View.GONE);
             }
             if (friendCircleBean.isShowComment()) {
+                holder.verticalCommentWidget.setVisibility(View.VISIBLE);
                 holder.verticalCommentWidget.addComments(friendCircleBean.getCommentBeans(), false);
             } else {
-                holder.viewLine.setVisibility(View.GONE);
+                holder.verticalCommentWidget.setVisibility(View.GONE);
             }
         } else {
             holder.layoutPraiseAndComment.setVisibility(View.GONE);

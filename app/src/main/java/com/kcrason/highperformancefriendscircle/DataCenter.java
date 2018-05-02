@@ -1,7 +1,6 @@
 package com.kcrason.highperformancefriendscircle;
 
 import android.content.Context;
-
 import com.kcrason.highperformancefriendscircle.beans.CommentBean;
 import com.kcrason.highperformancefriendscircle.beans.FriendCircleBean;
 import com.kcrason.highperformancefriendscircle.beans.ImageBean;

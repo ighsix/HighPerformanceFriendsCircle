@@ -1,6 +1,6 @@
 # HighPerformanceFriendsCircle
 众所周知，微信朋友圈的列表一直以来被众多研究性能问题的朋友拿来作为模范，对于其实现方式，一直以来有点难以望其项背的感觉。只能默默的感叹微信的开发者是真的牛逼。经过一段时间的研究，现在我将带领大家以全新的认知对微信朋友圈的结构进行分析，并通过自己的方式加以实现。
-先上图：![20180503_222857.gif](https://upload-images.jianshu.io/upload_images/1860505-8598f3a9a5664f11.gif?imageMogr2/auto-orient/strip)
+先上图：![](https://github.com/KCrason/HighPerformanceFriendsCircle/blob/master/app/apk/20180503_222857.gif)
 
 GIF看着有点卡，可以下载apk自行体验，流畅度和微信几乎无差别：https://github.com/KCrason/HighPerformanceFriendsCircle/blob/master/app/apk/app-debug.apk
 

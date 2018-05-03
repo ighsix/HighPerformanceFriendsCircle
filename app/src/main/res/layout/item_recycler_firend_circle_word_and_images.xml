@@ -28,15 +28,7 @@
             />
 
 
-        <TextView
-            android:id="@+id/txt_content"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:clickable="true"
-            android:background="@drawable/selector_view_content_state"
-            android:lineSpacingExtra="3dp"
-            android:textColor="@color/base_333333"
-            android:textSize="16sp" />
+        <include layout="@layout/include_item_recycler_content"/>
 
         <include layout="@layout/view_translation_layout"/>
         <com.kcrason.highperformancefriendscircle.widgets.NineGridView

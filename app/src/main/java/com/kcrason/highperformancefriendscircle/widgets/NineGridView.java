@@ -7,11 +7,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.kcrason.highperformancefriendscircle.SimpleWeakObjectPool;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author KCrason
  * @date 2018/4/27
  */
-public class NineGridView extends ViewGroup {
+public class NineGridView extends ViewGroup implements ViewGroup.OnHierarchyChangeListener {
     private NineGridAdapter mAdapter;
     private OnImageClickListener mListener;
     private int mRows;
@@ -19,6 +24,8 @@ public class NineGridView extends ViewGroup {
     private int mSpace;
     private int mChildWidth;
     private int mChildHeight;
+
+    private SimpleWeakObjectPool<View> IMAGE_POOL;
 
     public NineGridView(Context context) {
         this(context, null);
@@ -30,6 +37,8 @@ public class NineGridView extends ViewGroup {
     }
 
     private void initView(Context context) {
+        setOnHierarchyChangeListener(this);
+        IMAGE_POOL = new SimpleWeakObjectPool<>(5);
         mSpace = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
                 4f, context.getResources().getDisplayMetrics());
     }
@@ -46,6 +55,11 @@ public class NineGridView extends ViewGroup {
         if (adapter == null || adapter.getCount() <= 0) {
             removeAllViews();
             return;
+        }
+        if (mImageViews == null) {
+            mImageViews = new ArrayList<>();
+        } else {
+            mImageViews.clear();
         }
         mAdapter = adapter;
         int oldCount = getChildCount();
@@ -85,17 +99,24 @@ public class NineGridView extends ViewGroup {
             boolean hasChild = i < childCount;
             // 简单的回收机制,主要是为ListView/RecyclerView做优化
             View recycleView = hasChild ? getChildAt(i) : null;
-            View child = adapter.getView(i, recycleView);
-
-            if (child != recycleView) {
-                if (hasChild) {
-                    removeView(recycleView);
-                }
-                addViewInLayout(child,i,child.getLayoutParams(),true);
+            if (recycleView == null) {
+                recycleView = IMAGE_POOL.get();
+                View child = adapter.getView(i, recycleView);
+                addViewInLayout(child, i, child.getLayoutParams(), true);
+                mImageViews.add((ImageView) child);
+            } else {
+                adapter.getView(i, recycleView);
+                mImageViews.add((ImageView) recycleView);
             }
         }
     }
 
+
+    private List<ImageView> mImageViews;
+
+    public List<ImageView> getImageViews() {
+        return mImageViews;
+    }
 
     @Override
     protected boolean addViewInLayout(View child, int index, LayoutParams params, boolean preventRequestLayout) {
@@ -171,7 +192,7 @@ public class NineGridView extends ViewGroup {
             final int position = i;
             view.setOnClickListener(v -> {
                 if (mListener != null) {
-                    mListener.onImageClick(position, v);
+                    mListener.onImageClick(position, view);
                 }
             });
         }
@@ -188,6 +209,16 @@ public class NineGridView extends ViewGroup {
 
     public int getSpace() {
         return mSpace;
+    }
+
+    @Override
+    public void onChildViewAdded(View parent, View child) {
+
+    }
+
+    @Override
+    public void onChildViewRemoved(View parent, View child) {
+        IMAGE_POOL.put(child);
     }
 
 

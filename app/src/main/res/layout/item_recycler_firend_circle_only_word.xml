@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/base_FFFFFF"
-    android:padding="10dp">
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:background="@color/base_FFFFFF"
+             android:padding="10dp">
 
     <ImageView
         android:id="@+id/img_avatar"
         android:layout_width="44dp"
         android:layout_height="44dp"
-        android:background="@color/base_F2F2F2" />
+        android:background="@color/base_F2F2F2"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -24,26 +24,17 @@
             android:background="@drawable/selector_view_content_state"
             android:clickable="true"
             android:textColor="#697A9F"
-            android:textSize="16sp" />
+            android:textSize="16sp"/>
 
-
-        <TextView
-            android:id="@+id/txt_content"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:clickable="true"
-            android:background="@drawable/selector_view_content_state"
-            android:lineSpacingExtra="3dp"
-            android:textColor="@color/base_333333"
-            android:textSize="16sp" />
+        <include layout="@layout/include_item_recycler_content"/>
 
         <include layout="@layout/view_translation_layout"/>
 
-        <include layout="@layout/include_item_recycler_location" />
+        <include layout="@layout/include_item_recycler_location"/>
 
-        <include layout="@layout/include_item_recycler_time" />
+        <include layout="@layout/include_item_recycler_time"/>
 
-        <include layout="@layout/include_item_recycler_praise_and_comment" />
+        <include layout="@layout/include_item_recycler_praise_and_comment"/>
 
     </LinearLayout>
 </FrameLayout>

@@ -6,7 +6,11 @@
         <item name="colorPrimary">@color/base_222230</item>
         <item name="colorPrimaryDark">@color/base_222230</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
     </style>
+
+
 
     <style name="PraiseOrCommentAnimationStyle">
         <item name="android:windowEnterAnimation">@anim/anim_praise_or_comment_in</item>

@@ -17,7 +17,7 @@ public class VerticalImageSpan extends ImageSpan {
     public VerticalImageSpan(Context context, Drawable drawable) {
         super(drawable);
         this.mDrawable = drawable;
-        this.mDrawableSize = Utils.dp2px(context, 15f);
+        this.mDrawableSize = Utils.dp2px(15f);
     }
 
     /**

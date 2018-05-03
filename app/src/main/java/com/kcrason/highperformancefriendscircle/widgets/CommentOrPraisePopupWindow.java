@@ -18,17 +18,16 @@ public class CommentOrPraisePopupWindow extends PopupWindow implements View.OnCl
 
     private int mPopupWindowHeight;
     private int mPopupWindowWidth;
+    private int mCurrentPosition;
 
-    public CommentOrPraisePopupWindow(Builder builder) {
-        this.mContext = builder.context;
-        this.mOnPraiseOrCommentClickListener = builder.onPraiseOrCommentClickListener;
-        View contentView = LayoutInflater.from(builder.context).inflate(R.layout.popup_window_praise_or_comment_view, null);
+    public CommentOrPraisePopupWindow(Context context) {
+        View contentView = LayoutInflater.from(context).inflate(R.layout.popup_window_praise_or_comment_view, null);
         this.setContentView(contentView);
         contentView.findViewById(R.id.layout_praise).setOnClickListener(this);
         contentView.findViewById(R.id.layout_comment).setOnClickListener(this);
         //不设置宽高将无法显示popupWindow
-        this.mPopupWindowHeight = Utils.dp2px(mContext, 38);
-        this.mPopupWindowWidth = Utils.dp2px(mContext, 190);
+        this.mPopupWindowHeight = Utils.dp2px(38);
+        this.mPopupWindowWidth = Utils.dp2px(190);
         this.setHeight(mPopupWindowHeight);
         this.setWidth(mPopupWindowWidth);
         // 设置SelectPicPopupWindow弹出窗体可点击
@@ -42,23 +41,14 @@ public class CommentOrPraisePopupWindow extends PopupWindow implements View.OnCl
         this.setBackgroundDrawable(dw);
     }
 
-    public static class Builder {
-        private Context context;
+    public CommentOrPraisePopupWindow setCurrentPosition(int currentPosition) {
+        mCurrentPosition = currentPosition;
+        return this;
+    }
 
-        private OnPraiseOrCommentClickListener onPraiseOrCommentClickListener;
-
-        public Builder(Context context) {
-            this.context = context;
-        }
-
-        public Builder setOnPraiseOrCommentClickListener(OnPraiseOrCommentClickListener onPraiseOrCommentClickListener) {
-            this.onPraiseOrCommentClickListener = onPraiseOrCommentClickListener;
-            return this;
-        }
-
-        public CommentOrPraisePopupWindow build() {
-            return new CommentOrPraisePopupWindow(this);
-        }
+    public CommentOrPraisePopupWindow setOnPraiseOrCommentClickListener(OnPraiseOrCommentClickListener onPraiseOrCommentClickListener) {
+        mOnPraiseOrCommentClickListener = onPraiseOrCommentClickListener;
+        return this;
     }
 
     public void showPopupWindow(View anchor) {
@@ -67,7 +57,7 @@ public class CommentOrPraisePopupWindow extends PopupWindow implements View.OnCl
         }
         int[] location = new int[2];
         anchor.getLocationOnScreen(location);
-        int xOffset = location[0] - mPopupWindowWidth - Utils.dp2px(mContext, 10f);
+        int xOffset = location[0] - mPopupWindowWidth - Utils.dp2px(10f);
         int yOffset = location[1] + (anchor.getHeight() - mPopupWindowHeight) / 2;
         showAtLocation(anchor, Gravity.NO_GRAVITY, xOffset, yOffset);
     }
@@ -78,12 +68,12 @@ public class CommentOrPraisePopupWindow extends PopupWindow implements View.OnCl
         switch (v.getId()) {
             case R.id.layout_praise:
                 if (mOnPraiseOrCommentClickListener != null) {
-                    mOnPraiseOrCommentClickListener.onPraiseClick();
+                    mOnPraiseOrCommentClickListener.onPraiseClick(mCurrentPosition);
                 }
                 break;
             case R.id.layout_comment:
                 if (mOnPraiseOrCommentClickListener != null) {
-                    mOnPraiseOrCommentClickListener.onCommentClick();
+                    mOnPraiseOrCommentClickListener.onCommentClick(mCurrentPosition);
                 }
                 break;
             default:

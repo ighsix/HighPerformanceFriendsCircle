@@ -4,24 +4,20 @@ import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.text.SpannableStringBuilder;
-import android.text.method.LinkMovementMethod;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.kcrason.highperformancefriendscircle.R;
+import com.kcrason.highperformancefriendscircle.SimpleWeakObjectPool;
 import com.kcrason.highperformancefriendscircle.TimerUtils;
 import com.kcrason.highperformancefriendscircle.enums.TranslationState;
 import com.kcrason.highperformancefriendscircle.interfaces.OnItemClickPopupMenuListener;
 import com.kcrason.highperformancefriendscircle.Utils;
 import com.kcrason.highperformancefriendscircle.beans.CommentBean;
 import com.kcrason.highperformancefriendscircle.span.TextMovementMothod;
-
-import java.lang.ref.WeakReference;
-import java.lang.reflect.Array;
 import java.util.List;
 
 /**
@@ -185,7 +181,7 @@ public class VerticalCommentWidget extends LinearLayout implements ViewGroup.OnH
         textView.setTextColor(ContextCompat.getColor(getContext(), R.color.base_333333));
         textView.setBackgroundResource(R.drawable.selector_view_name_state);
         textView.setTextSize(16f);
-        textView.setLineSpacing(Utils.dp2px(getContext(), 3f), 1f);
+        textView.setLineSpacing(Utils.dp2px( 3f), 1f);
         textView.setText(content);
         textView.setMovementMethod(new TextMovementMothod());
         addOnItemClickPopupMenuListener(textView, index, TranslationState.START);
@@ -195,7 +191,7 @@ public class VerticalCommentWidget extends LinearLayout implements ViewGroup.OnH
     private LayoutParams generateMarginLayoutParams(int index) {
         LinearLayout.LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         if (mCommentBeans != null) {
-            layoutParams.bottomMargin = index == mCommentBeans.size() - 1 ? 0 : Utils.dp2px(getContext(), 6f);
+            layoutParams.bottomMargin = index == mCommentBeans.size() - 1 ? 0 : Utils.dp2px( 4f);
         }
         return layoutParams;
     }
@@ -212,7 +208,7 @@ public class VerticalCommentWidget extends LinearLayout implements ViewGroup.OnH
 
     @Override
     public void onItemClickCopy(int position) {
-        Toast.makeText(getContext(), "You Click" + position + " Copy!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "已复制", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -240,55 +236,9 @@ public class VerticalCommentWidget extends LinearLayout implements ViewGroup.OnH
 
     @Override
     public void onItemClickCollection(int position) {
-        Toast.makeText(getContext(), "You Click" + position + "  Collection!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "已收藏", Toast.LENGTH_SHORT).show();
     }
 
-
-    final class SimpleWeakObjectPool<T> {
-
-        private WeakReference<T>[] objsPool;
-        private int size;
-        private int curPointer = -1;
-
-
-        public SimpleWeakObjectPool() {
-            this(5);
-        }
-
-        public SimpleWeakObjectPool(int size) {
-            this.size = size;
-            objsPool = (WeakReference<T>[]) Array.newInstance(WeakReference.class, size);
-        }
-
-        public synchronized T get() {
-            if (curPointer == -1 || curPointer > objsPool.length) return null;
-            T obj = objsPool[curPointer].get();
-            objsPool[curPointer] = null;
-            curPointer--;
-            return obj;
-        }
-
-        public synchronized boolean put(T t) {
-            if (curPointer == -1 || curPointer < objsPool.length - 1) {
-                curPointer++;
-                objsPool[curPointer] = new WeakReference<T>(t);
-                return true;
-            }
-            return false;
-        }
-
-        public void clearPool() {
-            for (int i = 0; i < objsPool.length; i++) {
-                objsPool[i].clear();
-                objsPool[i] = null;
-            }
-            curPointer = -1;
-        }
-
-        public int size() {
-            return objsPool == null ? 0 : objsPool.length;
-        }
-    }
 
 
 }

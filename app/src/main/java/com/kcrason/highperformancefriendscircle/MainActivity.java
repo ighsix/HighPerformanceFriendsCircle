@@ -1,28 +1,19 @@
 package com.kcrason.highperformancefriendscircle;
 
-
+import android.content.Context;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.ImageView;
 import android.widget.Toast;
-
 import com.bumptech.glide.Glide;
 import com.kcrason.highperformancefriendscircle.adapters.FriendCircleAdapter;
-import com.kcrason.highperformancefriendscircle.beans.CommentBean;
 import com.kcrason.highperformancefriendscircle.beans.FriendCircleBean;
-import com.kcrason.highperformancefriendscircle.beans.ImageBean;
-import com.kcrason.highperformancefriendscircle.beans.OtherInfoBean;
-import com.kcrason.highperformancefriendscircle.beans.PraiseBean;
-import com.kcrason.highperformancefriendscircle.beans.UserBean;
 import com.kcrason.highperformancefriendscircle.interfaces.OnPraiseOrCommentClickListener;
-import com.kcrason.highperformancefriendscircle.interfaces.OnStartSwipeRefreshListener;
-
-import java.util.ArrayList;
 import java.util.List;
-
+import ch.ielse.view.imagewatcher.ImageWatcher;
 import io.reactivex.Single;
 import io.reactivex.SingleOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -30,11 +21,12 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener,
-        OnPraiseOrCommentClickListener {
+        OnPraiseOrCommentClickListener, ImageWatcher.OnPictureLongPressListener, ImageWatcher.Loader {
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private Disposable mDisposable;
     private FriendCircleAdapter mFriendCircleAdapter;
+    private ImageWatcher mImageWatcher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,11 +52,15 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 super.onScrolled(recyclerView, dx, dy);
             }
         });
-
+        mImageWatcher = findViewById(R.id.image_watcher);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.addItemDecoration(new FriendsCircleAdapterDivideLine(this));
-        mFriendCircleAdapter = new FriendCircleAdapter(this, recyclerView);
+        mFriendCircleAdapter = new FriendCircleAdapter(this, recyclerView, mImageWatcher);
         recyclerView.setAdapter(mFriendCircleAdapter);
+        mImageWatcher.setTranslucentStatus(Utils.calcStatusBarHeight(this));
+        mImageWatcher.setErrorImageRes(R.mipmap.error_picture);
+        mImageWatcher.setOnPictureLongPressListener(this);
+        mImageWatcher.setLoader(this);
         Utils.showSwipeRefreshLayout(mSwipeRefreshLayout, this::asyncMakeData);
     }
 
@@ -96,12 +92,30 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     }
 
     @Override
-    public void onPraiseClick() {
+    public void onPraiseClick(int position) {
         Toast.makeText(this, "You Click Praise!", Toast.LENGTH_SHORT).show();
     }
 
     @Override
-    public void onCommentClick() {
+    public void onCommentClick(int position) {
         Toast.makeText(this, "You Click Comment!", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (!mImageWatcher.handleBackPressed()) {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public void onPictureLongPress(ImageView v, String url, int pos) {
+
+    }
+
+
+    @Override
+    public void load(Context context, String url, ImageWatcher.LoadCallback lc) {
+        Glide.with(context).asBitmap().load(url).into(new GlideSimpleTarget(lc));
     }
 }

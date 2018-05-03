@@ -12,7 +12,6 @@ import com.bumptech.glide.request.RequestOptions;
 import com.kcrason.highperformancefriendscircle.widgets.NineGridView;
 import com.kcrason.highperformancefriendscircle.R;
 import com.kcrason.highperformancefriendscircle.Utils;
-import com.kcrason.highperformancefriendscircle.beans.ImageBean;
 
 import java.util.List;
 
@@ -20,9 +19,9 @@ import java.util.List;
  * @author KCrason
  * @date 2018/4/27
  */
-public class NineImageAdapter implements NineGridView.NineGridAdapter<ImageBean> {
+public class NineImageAdapter implements NineGridView.NineGridAdapter<String> {
 
-    private List<ImageBean> mImageBeans;
+    private List<String> mImageBeans;
 
     private Context mContext;
 
@@ -31,12 +30,12 @@ public class NineImageAdapter implements NineGridView.NineGridAdapter<ImageBean>
     private DrawableTransitionOptions mDrawableTransitionOptions;
 
 
-    public NineImageAdapter(Context context, RequestOptions requestOptions, DrawableTransitionOptions drawableTransitionOptions, List<ImageBean> imageBeans) {
+    public NineImageAdapter(Context context, RequestOptions requestOptions, DrawableTransitionOptions drawableTransitionOptions, List<String> imageBeans) {
         this.mContext = context;
         this.mDrawableTransitionOptions = drawableTransitionOptions;
         this.mImageBeans = imageBeans;
-        int itemSize = (Utils.getScreenWidth(context) -
-                2 * Utils.dp2px(context, 4) - Utils.dp2px(context, 54)) / 3;
+        int itemSize = (Utils.getScreenWidth() -
+                2 * Utils.dp2px(4) - Utils.dp2px(54)) / 3;
         this.mRequestOptions = requestOptions.override(itemSize, itemSize);
     }
 
@@ -46,7 +45,7 @@ public class NineImageAdapter implements NineGridView.NineGridAdapter<ImageBean>
     }
 
     @Override
-    public ImageBean getItem(int position) {
+    public String getItem(int position) {
         return mImageBeans == null ? null :
                 position < mImageBeans.size() ? mImageBeans.get(position) : null;
     }
@@ -61,7 +60,7 @@ public class NineImageAdapter implements NineGridView.NineGridAdapter<ImageBean>
         } else {
             imageView = (ImageView) itemView;
         }
-        String url = mImageBeans.get(position).getImageUrl();
+        String url = mImageBeans.get(position);
         Glide.with(mContext).load(url).apply(mRequestOptions).transition(mDrawableTransitionOptions).into(imageView);
         return imageView;
     }

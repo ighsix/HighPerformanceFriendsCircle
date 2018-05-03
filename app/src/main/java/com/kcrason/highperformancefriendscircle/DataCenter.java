@@ -3,7 +3,6 @@ package com.kcrason.highperformancefriendscircle;
 import android.content.Context;
 import com.kcrason.highperformancefriendscircle.beans.CommentBean;
 import com.kcrason.highperformancefriendscircle.beans.FriendCircleBean;
-import com.kcrason.highperformancefriendscircle.beans.ImageBean;
 import com.kcrason.highperformancefriendscircle.beans.OtherInfoBean;
 import com.kcrason.highperformancefriendscircle.beans.PraiseBean;
 import com.kcrason.highperformancefriendscircle.beans.UserBean;
@@ -30,7 +29,7 @@ public class DataCenter {
                 friendCircleBean.setViewType(Constants.FriendCircleType.FRIEND_CIRCLE_TYPE_WORD_AND_URL);
             }
             friendCircleBean.setCommentBeans(makeCommentBeans(context));
-            friendCircleBean.setImageBeans(makeImages());
+            friendCircleBean.setImageUrls(makeImages());
             List<PraiseBean> praiseBeans = makePraiseBeans();
             friendCircleBean.setPraiseSpan(SpanUtils.makePraiseSpan(context, praiseBeans));
             friendCircleBean.setPraiseBeans(praiseBeans);
@@ -57,8 +56,8 @@ public class DataCenter {
     }
 
 
-    private static List<ImageBean> makeImages() {
-        List<ImageBean> imageBeans = new ArrayList<>();
+    private static List<String> makeImages() {
+        List<String> imageBeans = new ArrayList<>();
         int randomCount = (int) (Math.random() * 9);
         if (randomCount == 0) {
             randomCount = randomCount + 1;
@@ -66,9 +65,7 @@ public class DataCenter {
             randomCount = randomCount + 1;
         }
         for (int i = 0; i < randomCount; i++) {
-            ImageBean imageBean = new ImageBean();
-            imageBean.setImageUrl(Constants.IMAGE_URL[(int) (Math.random() * 50)]);
-            imageBeans.add(imageBean);
+            imageBeans.add(Constants.IMAGE_URL[(int) (Math.random() * 50)]);
         }
         return imageBeans;
     }

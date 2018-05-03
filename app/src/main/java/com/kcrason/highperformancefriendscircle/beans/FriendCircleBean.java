@@ -2,6 +2,7 @@ package com.kcrason.highperformancefriendscircle.beans;
 
 import android.text.SpannableStringBuilder;
 
+import com.kcrason.highperformancefriendscircle.Utils;
 import com.kcrason.highperformancefriendscircle.enums.TranslationState;
 
 import java.util.List;
@@ -16,7 +17,7 @@ public class FriendCircleBean {
 
     private List<PraiseBean> praiseBeans;
 
-    private List<ImageBean> imageBeans;
+    private List<String> imageUrls;
 
     private UserBean userBean;
 
@@ -24,7 +25,27 @@ public class FriendCircleBean {
 
     private boolean isShowPraise;
 
+    private boolean isExpanded;
+
+    public boolean isExpanded() {
+        return isExpanded;
+    }
+
+    public void setExpanded(boolean expanded) {
+        isExpanded = expanded;
+    }
+
     private boolean isShowComment;
+
+    private boolean isShowCheckAll;
+
+    public boolean isShowCheckAll() {
+        return isShowCheckAll;
+    }
+
+    public void setShowCheckAll(boolean showCheckAll) {
+        isShowCheckAll = showCheckAll;
+    }
 
     private TranslationState translationState = TranslationState.START;
 
@@ -78,6 +99,7 @@ public class FriendCircleBean {
 
     public void setContentSpan(SpannableStringBuilder contentSpan) {
         this.contentSpan = contentSpan;
+        this.isShowCheckAll = Utils.calculateShowCheckAllText(contentSpan.toString());
     }
 
     private SpannableStringBuilder contentSpan;
@@ -106,12 +128,13 @@ public class FriendCircleBean {
         this.praiseBeans = praiseBeans;
     }
 
-    public List<ImageBean> getImageBeans() {
-        return imageBeans;
+
+    public List<String> getImageUrls() {
+        return imageUrls;
     }
 
-    public void setImageBeans(List<ImageBean> imageBeans) {
-        this.imageBeans = imageBeans;
+    public void setImageUrls(List<String> imageUrls) {
+        this.imageUrls = imageUrls;
     }
 
 

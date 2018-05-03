@@ -1,6 +1,5 @@
 package com.kcrason.highperformancefriendscircle.adapters;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,7 +21,6 @@ import com.kcrason.highperformancefriendscircle.TimerUtils;
 import com.kcrason.highperformancefriendscircle.enums.TranslationState;
 import com.kcrason.highperformancefriendscircle.interfaces.OnItemClickPopupMenuListener;
 import com.kcrason.highperformancefriendscircle.interfaces.OnPraiseOrCommentClickListener;
-import com.kcrason.highperformancefriendscircle.interfaces.OnTimerResultListener;
 import com.kcrason.highperformancefriendscircle.widgets.CommentOrPraisePopupWindow;
 import com.kcrason.highperformancefriendscircle.widgets.NineGridView;
 import com.kcrason.highperformancefriendscircle.R;
@@ -35,11 +33,8 @@ import com.kcrason.highperformancefriendscircle.widgets.VerticalCommentWidget;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
-import io.reactivex.Single;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
+import ch.ielse.view.imagewatcher.ImageWatcher;
 
 /**
  * @author KCrason
@@ -68,11 +63,14 @@ public class FriendCircleAdapter extends RecyclerView.Adapter<FriendCircleAdapte
 
     private RecyclerView mRecyclerView;
 
-    public FriendCircleAdapter(Context context, RecyclerView recyclerView) {
+    private ImageWatcher mImageWatcher;
+
+    public FriendCircleAdapter(Context context, RecyclerView recyclerView, ImageWatcher imageWatcher) {
         this.mContext = context;
+        this.mImageWatcher = imageWatcher;
         mRecyclerView = recyclerView;
         this.mLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-        this.mAvatarSize = Utils.dp2px(context, 44f);
+        this.mAvatarSize = Utils.dp2px(44f);
         this.mLayoutInflater = LayoutInflater.from(context);
         this.mRequestOptions = new RequestOptions().centerCrop();
         this.mDrawableTransitionOptions = DrawableTransitionOptions.withCrossFade();
@@ -120,15 +118,20 @@ public class FriendCircleAdapter extends RecyclerView.Adapter<FriendCircleAdapte
                 wordAndUrlViewHolder.layoutUrl.setOnClickListener(v -> Toast.makeText(mContext, "You Click Layout Url", Toast.LENGTH_SHORT).show());
             } else if (holder instanceof WordAndImagesViewHolder) {
                 WordAndImagesViewHolder wordAndImagesViewHolder = (WordAndImagesViewHolder) holder;
-                wordAndImagesViewHolder.nineGridView.setOnImageClickListener((position1, view) -> Toast.makeText(mContext, "You Click position " + position1, Toast.LENGTH_SHORT).show());
+                wordAndImagesViewHolder.nineGridView.setOnImageClickListener((position1, view) -> {
+                    mImageWatcher.show((ImageView) view, wordAndImagesViewHolder.nineGridView.getImageViews(),
+                            friendCircleBean.getImageUrls());
+                });
                 wordAndImagesViewHolder.nineGridView.setAdapter(new NineImageAdapter(mContext, mRequestOptions,
-                        mDrawableTransitionOptions, friendCircleBean.getImageBeans()));
+                        mDrawableTransitionOptions, friendCircleBean.getImageUrls()));
             }
         }
     }
 
+
     private void makeUserBaseData(BaseFriendCircleViewHolder holder, FriendCircleBean friendCircleBean, int position) {
         holder.txtContent.setText(friendCircleBean.getContentSpan());
+        setContentShowState(holder, friendCircleBean);
         holder.txtContent.setOnLongClickListener(v -> {
             TranslationState translationState = friendCircleBean.getTranslationState();
             if (translationState == TranslationState.END) {
@@ -184,9 +187,11 @@ public class FriendCircleAdapter extends RecyclerView.Adapter<FriendCircleAdapte
         holder.imgPraiseOrComment.setOnClickListener(v -> {
             if (mContext instanceof Activity) {
                 if (mCommentOrPraisePopupWindow == null) {
-                    mCommentOrPraisePopupWindow = new CommentOrPraisePopupWindow.Builder(mContext)
-                            .setOnPraiseOrCommentClickListener(mOnPraiseOrCommentClickListener).build();
+                    mCommentOrPraisePopupWindow = new CommentOrPraisePopupWindow(mContext);
                 }
+                mCommentOrPraisePopupWindow
+                        .setOnPraiseOrCommentClickListener(mOnPraiseOrCommentClickListener)
+                        .setCurrentPosition(position);
                 if (mCommentOrPraisePopupWindow.isShowing()) {
                     mCommentOrPraisePopupWindow.dismiss();
                 } else {
@@ -198,6 +203,33 @@ public class FriendCircleAdapter extends RecyclerView.Adapter<FriendCircleAdapte
         holder.txtLocation.setOnClickListener(v -> Toast.makeText(mContext, "You Click Location", Toast.LENGTH_SHORT).show());
     }
 
+    private void setContentShowState(BaseFriendCircleViewHolder holder, FriendCircleBean friendCircleBean) {
+        if (friendCircleBean.isShowCheckAll()) {
+            holder.txtState.setVisibility(View.VISIBLE);
+            setTextState(holder, friendCircleBean.isExpanded());
+            holder.txtState.setOnClickListener(v -> {
+                if (friendCircleBean.isExpanded()) {
+                    friendCircleBean.setExpanded(false);
+                } else {
+                    friendCircleBean.setExpanded(true);
+                }
+                setTextState(holder, friendCircleBean.isExpanded());
+            });
+        } else {
+            holder.txtState.setVisibility(View.GONE);
+            holder.txtContent.setMaxLines(Integer.MAX_VALUE);
+        }
+    }
+
+    private void setTextState(BaseFriendCircleViewHolder holder, boolean isExpand) {
+        if (isExpand) {
+            holder.txtContent.setMaxLines(Integer.MAX_VALUE);
+            holder.txtState.setText("收起");
+        } else {
+            holder.txtContent.setMaxLines(4);
+            holder.txtState.setText("全文");
+        }
+    }
 
     @Override
     public int getItemViewType(int position) {
@@ -236,7 +268,6 @@ public class FriendCircleAdapter extends RecyclerView.Adapter<FriendCircleAdapte
             notifyTargetItemView(position, TranslationState.START, null);
         }
     }
-
 
 
     private void updateTargetItemContent(int position, BaseFriendCircleViewHolder baseFriendCircleViewHolder,
@@ -325,6 +356,7 @@ public class FriendCircleAdapter extends RecyclerView.Adapter<FriendCircleAdapte
         public ImageView imgPraiseOrComment;
         public TextView txtLocation;
         public TextView txtContent;
+        public TextView txtState;
         public LinearLayout layoutTranslation;
         public TextView txtTranslationContent;
         public View divideLine;
@@ -344,6 +376,7 @@ public class FriendCircleAdapter extends RecyclerView.Adapter<FriendCircleAdapte
             imgPraiseOrComment = itemView.findViewById(R.id.img_click_praise_or_comment);
             txtLocation = itemView.findViewById(R.id.txt_location);
             txtContent = itemView.findViewById(R.id.txt_content);
+            txtState = itemView.findViewById(R.id.txt_state);
             txtTranslationContent = itemView.findViewById(R.id.txt_translation_content);
             layoutTranslation = itemView.findViewById(R.id.layout_translation);
             layoutPraiseAndComment = itemView.findViewById(R.id.layout_praise_and_comment);

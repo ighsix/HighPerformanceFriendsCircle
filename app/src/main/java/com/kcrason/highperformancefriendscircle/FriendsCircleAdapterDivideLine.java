@@ -13,7 +13,7 @@ public class FriendsCircleAdapterDivideLine extends RecyclerView.ItemDecoration 
     private int mDivideHeight;
 
     public FriendsCircleAdapterDivideLine(Context context) {
-        mDivideHeight = Utils.dp2px(context, 0.5f);
+        mDivideHeight = Utils.dp2px(0.5f);
     }
 
     @Override

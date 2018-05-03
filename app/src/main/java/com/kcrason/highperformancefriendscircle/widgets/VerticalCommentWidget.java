@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.kcrason.highperformancefriendscircle.R;
 import com.kcrason.highperformancefriendscircle.SimpleWeakObjectPool;
 import com.kcrason.highperformancefriendscircle.TimerUtils;
@@ -18,6 +19,7 @@ import com.kcrason.highperformancefriendscircle.interfaces.OnItemClickPopupMenuL
 import com.kcrason.highperformancefriendscircle.Utils;
 import com.kcrason.highperformancefriendscircle.beans.CommentBean;
 import com.kcrason.highperformancefriendscircle.span.TextMovementMothod;
+
 import java.util.List;
 
 /**
@@ -29,7 +31,9 @@ public class VerticalCommentWidget extends LinearLayout implements ViewGroup.OnH
 
     private List<CommentBean> mCommentBeans;
 
+    private LinearLayout.LayoutParams mLayoutParams;
     private SimpleWeakObjectPool<View> COMMENT_TEXT_POOL;
+    private int mCommentVerticalSpace;
 
     public VerticalCommentWidget(Context context) {
         super(context);
@@ -47,6 +51,7 @@ public class VerticalCommentWidget extends LinearLayout implements ViewGroup.OnH
     }
 
     private void init() {
+        mCommentVerticalSpace = Utils.dp2px(3f);
         COMMENT_TEXT_POOL = new SimpleWeakObjectPool<>();
         setOnHierarchyChangeListener(this);
     }
@@ -181,19 +186,22 @@ public class VerticalCommentWidget extends LinearLayout implements ViewGroup.OnH
         textView.setTextColor(ContextCompat.getColor(getContext(), R.color.base_333333));
         textView.setBackgroundResource(R.drawable.selector_view_name_state);
         textView.setTextSize(16f);
-        textView.setLineSpacing(Utils.dp2px( 3f), 1f);
+        textView.setLineSpacing(mCommentVerticalSpace, 1f);
         textView.setText(content);
         textView.setMovementMethod(new TextMovementMothod());
         addOnItemClickPopupMenuListener(textView, index, TranslationState.START);
         return textView;
     }
 
+
     private LayoutParams generateMarginLayoutParams(int index) {
-        LinearLayout.LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        if (mCommentBeans != null) {
-            layoutParams.bottomMargin = index == mCommentBeans.size() - 1 ? 0 : Utils.dp2px( 4f);
+        if (mLayoutParams == null) {
+            mLayoutParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         }
-        return layoutParams;
+        if (mCommentBeans != null && index > 0) {
+            mLayoutParams.bottomMargin = index == mCommentBeans.size() - 1 ? 0 : mCommentVerticalSpace;
+        }
+        return mLayoutParams;
     }
 
     @Override
@@ -238,7 +246,6 @@ public class VerticalCommentWidget extends LinearLayout implements ViewGroup.OnH
     public void onItemClickCollection(int position) {
         Toast.makeText(getContext(), "已收藏", Toast.LENGTH_SHORT).show();
     }
-
 
 
 }

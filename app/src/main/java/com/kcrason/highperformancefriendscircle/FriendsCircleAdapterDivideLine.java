@@ -1,8 +1,10 @@
 package com.kcrason.highperformancefriendscircle;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Rect;
 import android.support.v7.widget.RecyclerView;
+import android.util.TypedValue;
 import android.view.View;
 
 /**
@@ -12,7 +14,7 @@ import android.view.View;
 public class FriendsCircleAdapterDivideLine extends RecyclerView.ItemDecoration {
     private int mDivideHeight;
 
-    public FriendsCircleAdapterDivideLine(Context context) {
+    public FriendsCircleAdapterDivideLine() {
         mDivideHeight = Utils.dp2px(0.5f);
     }
 

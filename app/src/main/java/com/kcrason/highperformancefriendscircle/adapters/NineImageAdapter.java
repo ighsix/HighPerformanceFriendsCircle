@@ -34,8 +34,7 @@ public class NineImageAdapter implements NineGridView.NineGridAdapter<String> {
         this.mContext = context;
         this.mDrawableTransitionOptions = drawableTransitionOptions;
         this.mImageBeans = imageBeans;
-        int itemSize = (Utils.getScreenWidth() -
-                2 * Utils.dp2px(4) - Utils.dp2px(54)) / 3;
+        int itemSize = (Utils.getScreenWidth() - 2 * Utils.dp2px(4) - Utils.dp2px(54)) / 3;
         this.mRequestOptions = requestOptions.override(itemSize, itemSize);
     }
 

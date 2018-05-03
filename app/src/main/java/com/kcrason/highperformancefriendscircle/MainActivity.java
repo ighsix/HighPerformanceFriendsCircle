@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         });
         mImageWatcher = findViewById(R.id.image_watcher);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.addItemDecoration(new FriendsCircleAdapterDivideLine(this));
+        recyclerView.addItemDecoration(new FriendsCircleAdapterDivideLine());
         mFriendCircleAdapter = new FriendCircleAdapter(this, recyclerView, mImageWatcher);
         recyclerView.setAdapter(mFriendCircleAdapter);
         mImageWatcher.setTranslucentStatus(Utils.calcStatusBarHeight(this));

@@ -3,31 +3,18 @@ package com.kcrason.highperformancefriendscircle;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Paint;
-import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.text.Layout;
-import android.text.SpannableStringBuilder;
-import android.text.Spanned;
-import android.text.TextPaint;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.PopupMenu;
 
-import com.kcrason.highperformancefriendscircle.beans.PraiseBean;
 import com.kcrason.highperformancefriendscircle.enums.TranslationState;
 import com.kcrason.highperformancefriendscircle.interfaces.OnItemClickPopupMenuListener;
 import com.kcrason.highperformancefriendscircle.interfaces.OnStartSwipeRefreshListener;
-import com.kcrason.highperformancefriendscircle.span.TextClickSpan;
-import com.kcrason.highperformancefriendscircle.span.VerticalImageSpan;
-
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
 
 /**
  * @author KCrason

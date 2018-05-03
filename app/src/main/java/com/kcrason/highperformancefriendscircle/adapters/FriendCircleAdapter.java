@@ -12,7 +12,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
@@ -30,10 +29,8 @@ import com.kcrason.highperformancefriendscircle.beans.OtherInfoBean;
 import com.kcrason.highperformancefriendscircle.beans.UserBean;
 import com.kcrason.highperformancefriendscircle.span.TextMovementMothod;
 import com.kcrason.highperformancefriendscircle.widgets.VerticalCommentWidget;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import ch.ielse.view.imagewatcher.ImageWatcher;
 
 /**

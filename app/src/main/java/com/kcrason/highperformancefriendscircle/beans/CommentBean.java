@@ -2,13 +2,10 @@ package com.kcrason.highperformancefriendscircle.beans;
 
 import android.content.Context;
 import android.text.SpannableStringBuilder;
-import android.text.Spanned;
-import android.text.TextUtils;
 
 import com.kcrason.highperformancefriendscircle.Constants;
-import com.kcrason.highperformancefriendscircle.SpanUtils;
+import com.kcrason.highperformancefriendscircle.utils.SpanUtils;
 import com.kcrason.highperformancefriendscircle.enums.TranslationState;
-import com.kcrason.highperformancefriendscircle.span.TextClickSpan;
 
 public class CommentBean {
 

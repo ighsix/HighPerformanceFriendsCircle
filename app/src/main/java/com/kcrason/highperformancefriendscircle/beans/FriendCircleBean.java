@@ -2,7 +2,7 @@ package com.kcrason.highperformancefriendscircle.beans;
 
 import android.text.SpannableStringBuilder;
 
-import com.kcrason.highperformancefriendscircle.Utils;
+import com.kcrason.highperformancefriendscircle.utils.Utils;
 import com.kcrason.highperformancefriendscircle.enums.TranslationState;
 
 import java.util.List;

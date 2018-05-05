@@ -18,7 +18,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".ui.activitys.BigImagePreviewActivity"/>
+        <activity android:name=".ui.activitys.EmojiPanelActivity" />
     </application>
 
 </manifest>

@@ -7,7 +7,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.text.style.ImageSpan;
 
-import com.kcrason.highperformancefriendscircle.Utils;
+import com.kcrason.highperformancefriendscircle.utils.Utils;
 
 public class VerticalImageSpan extends ImageSpan {
     private Drawable mDrawable;

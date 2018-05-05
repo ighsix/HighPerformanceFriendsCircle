@@ -11,7 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.kcrason.highperformancefriendscircle.R;
-import com.kcrason.highperformancefriendscircle.Utils;
+import com.kcrason.highperformancefriendscircle.utils.Utils;
 import com.kcrason.highperformancefriendscircle.enums.TranslationState;
 import com.kcrason.highperformancefriendscircle.interfaces.OnItemClickPopupMenuListener;
 import com.kcrason.highperformancefriendscircle.span.TextMovementMothod;

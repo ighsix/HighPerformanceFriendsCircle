@@ -12,11 +12,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kcrason.highperformancefriendscircle.R;
-import com.kcrason.highperformancefriendscircle.SimpleWeakObjectPool;
-import com.kcrason.highperformancefriendscircle.TimerUtils;
+import com.kcrason.highperformancefriendscircle.others.SimpleWeakObjectPool;
+import com.kcrason.highperformancefriendscircle.utils.TimerUtils;
 import com.kcrason.highperformancefriendscircle.enums.TranslationState;
 import com.kcrason.highperformancefriendscircle.interfaces.OnItemClickPopupMenuListener;
-import com.kcrason.highperformancefriendscircle.Utils;
+import com.kcrason.highperformancefriendscircle.utils.Utils;
 import com.kcrason.highperformancefriendscircle.beans.CommentBean;
 import com.kcrason.highperformancefriendscircle.span.TextMovementMothod;
 

@@ -7,7 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.PopupWindow;
 import com.kcrason.highperformancefriendscircle.R;
-import com.kcrason.highperformancefriendscircle.Utils;
+import com.kcrason.highperformancefriendscircle.utils.Utils;
 import com.kcrason.highperformancefriendscircle.interfaces.OnPraiseOrCommentClickListener;
 
 public class CommentOrPraisePopupWindow extends PopupWindow implements View.OnClickListener {

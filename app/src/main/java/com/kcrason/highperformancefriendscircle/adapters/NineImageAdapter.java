@@ -11,7 +11,7 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
 import com.kcrason.highperformancefriendscircle.widgets.NineGridView;
 import com.kcrason.highperformancefriendscircle.R;
-import com.kcrason.highperformancefriendscircle.Utils;
+import com.kcrason.highperformancefriendscircle.utils.Utils;
 
 import java.util.List;
 

@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.kcrason.highperformancefriendscircle.SimpleWeakObjectPool;
+import com.kcrason.highperformancefriendscircle.others.SimpleWeakObjectPool;
 
 import java.util.ArrayList;
 import java.util.List;

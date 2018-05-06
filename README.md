@@ -38,3 +38,7 @@ GIF看着有点卡，可以下载apk自行体验，流畅度和微信几乎无�
 最后就是除了要减少onMeasure()和onLayout()的次数之后，我们也需要减少View的创建。减少View的创建我们可以使用一个弱引用的缓存数组和实现View对象的缓存，这里要感谢[razerdp](https://github.com/razerdp)提供的思路。
 
 具体的一些其他逻辑，代码中自行研究吧，后续可能还会继续更新该项目，包括表情的匹配，电话号码的匹配等，看自己时间情况。欢迎大家start！
+
+#### 特别说明：
+
+> 昨天有一位网友提出了一个问题，后面经过分析，发现在adapter中使用addViewInLayout()和addView()去添加一个或多个View无异，也就是说在adapter中构建评论数据时使用addViewInLayout()并不会减少onMeasure()和onLayout()的次数，原因后续再单独出一篇文章进行说明，这里感谢@Caij的指正！

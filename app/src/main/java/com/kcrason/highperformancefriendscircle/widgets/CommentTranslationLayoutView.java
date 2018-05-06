@@ -14,7 +14,7 @@ import com.kcrason.highperformancefriendscircle.R;
 import com.kcrason.highperformancefriendscircle.utils.Utils;
 import com.kcrason.highperformancefriendscircle.enums.TranslationState;
 import com.kcrason.highperformancefriendscircle.interfaces.OnItemClickPopupMenuListener;
-import com.kcrason.highperformancefriendscircle.span.TextMovementMothod;
+import com.kcrason.highperformancefriendscircle.span.TextMovementMethod;
 
 public class CommentTranslationLayoutView extends LinearLayout implements View.OnLongClickListener {
 
@@ -50,10 +50,10 @@ public class CommentTranslationLayoutView extends LinearLayout implements View.O
         mTranslationDesc = itemView.findViewById(R.id.txt_translation_desc);
         mTxtSourceContent = itemView.findViewById(R.id.txt_source_content);
         mTxtSourceContent.setOnLongClickListener(this);
-        mTxtSourceContent.setMovementMethod(new TextMovementMothod());
+        mTxtSourceContent.setMovementMethod(new TextMovementMethod());
         mTxtTranslationContent = itemView.findViewById(R.id.txt_translation_content);
         mTxtTranslationContent.setOnLongClickListener(this);
-        mTxtTranslationContent.setMovementMethod(new TextMovementMothod());
+        mTxtTranslationContent.setMovementMethod(new TextMovementMethod());
         setBackgroundResource(R.drawable.selector_view_name_state);
         mTxtSourceContent.setBackgroundResource(R.drawable.selector_view_name_state);
         mTxtTranslationContent.setBackgroundResource(R.drawable.selector_view_name_state);

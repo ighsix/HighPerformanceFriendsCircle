@@ -72,7 +72,7 @@ public class NineGridView extends ViewGroup implements ViewGroup.OnHierarchyChan
 
     private void removeScrapViews(int oldCount, int newCount) {
         if (newCount < oldCount) {
-            removeViewsInLayout(newCount - 1, oldCount - newCount);
+            removeViewsInLayout(newCount, oldCount - newCount);
         }
     }
 

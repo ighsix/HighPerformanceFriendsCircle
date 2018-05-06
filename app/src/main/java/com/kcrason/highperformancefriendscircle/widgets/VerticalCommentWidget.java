@@ -18,7 +18,7 @@ import com.kcrason.highperformancefriendscircle.enums.TranslationState;
 import com.kcrason.highperformancefriendscircle.interfaces.OnItemClickPopupMenuListener;
 import com.kcrason.highperformancefriendscircle.utils.Utils;
 import com.kcrason.highperformancefriendscircle.beans.CommentBean;
-import com.kcrason.highperformancefriendscircle.span.TextMovementMothod;
+import com.kcrason.highperformancefriendscircle.span.TextMovementMethod;
 
 import java.util.List;
 
@@ -26,8 +26,7 @@ import java.util.List;
  * @author KCrason
  * @date 2018/4/27
  */
-public class VerticalCommentWidget extends LinearLayout implements ViewGroup.OnHierarchyChangeListener,
-        OnItemClickPopupMenuListener {
+public class VerticalCommentWidget extends LinearLayout implements ViewGroup.OnHierarchyChangeListener, OnItemClickPopupMenuListener {
 
     private List<CommentBean> mCommentBeans;
 
@@ -188,7 +187,7 @@ public class VerticalCommentWidget extends LinearLayout implements ViewGroup.OnH
         textView.setTextSize(16f);
         textView.setLineSpacing(mCommentVerticalSpace, 1f);
         textView.setText(content);
-        textView.setMovementMethod(new TextMovementMothod());
+        textView.setMovementMethod(new TextMovementMethod());
         addOnItemClickPopupMenuListener(textView, index, TranslationState.START);
         return textView;
     }

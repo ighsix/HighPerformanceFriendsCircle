@@ -7,7 +7,7 @@ import android.text.method.LinkMovementMethod;
 import android.view.MotionEvent;
 import android.widget.TextView;
 
-public class TextMovementMothod extends LinkMovementMethod {
+public class TextMovementMethod extends LinkMovementMethod {
 
     private TextClickSpan mTextClickSpan;
 

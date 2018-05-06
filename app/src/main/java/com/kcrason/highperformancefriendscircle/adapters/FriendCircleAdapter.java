@@ -16,18 +16,18 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
 import com.kcrason.highperformancefriendscircle.Constants;
-import com.kcrason.highperformancefriendscircle.utils.TimerUtils;
 import com.kcrason.highperformancefriendscircle.enums.TranslationState;
 import com.kcrason.highperformancefriendscircle.interfaces.OnItemClickPopupMenuListener;
 import com.kcrason.highperformancefriendscircle.interfaces.OnPraiseOrCommentClickListener;
+import com.kcrason.highperformancefriendscircle.span.TextMovementMethod;
+import com.kcrason.highperformancefriendscircle.utils.TimerUtils;
+import com.kcrason.highperformancefriendscircle.utils.Utils;
 import com.kcrason.highperformancefriendscircle.widgets.CommentOrPraisePopupWindow;
 import com.kcrason.highperformancefriendscircle.widgets.NineGridView;
 import com.kcrason.highperformancefriendscircle.R;
-import com.kcrason.highperformancefriendscircle.utils.Utils;
 import com.kcrason.highperformancefriendscircle.beans.FriendCircleBean;
 import com.kcrason.highperformancefriendscircle.beans.OtherInfoBean;
 import com.kcrason.highperformancefriendscircle.beans.UserBean;
-import com.kcrason.highperformancefriendscircle.span.TextMovementMothod;
 import com.kcrason.highperformancefriendscircle.widgets.VerticalCommentWidget;
 import java.util.ArrayList;
 import java.util.List;
@@ -115,10 +115,9 @@ public class FriendCircleAdapter extends RecyclerView.Adapter<FriendCircleAdapte
                 wordAndUrlViewHolder.layoutUrl.setOnClickListener(v -> Toast.makeText(mContext, "You Click Layout Url", Toast.LENGTH_SHORT).show());
             } else if (holder instanceof WordAndImagesViewHolder) {
                 WordAndImagesViewHolder wordAndImagesViewHolder = (WordAndImagesViewHolder) holder;
-                wordAndImagesViewHolder.nineGridView.setOnImageClickListener((position1, view) -> {
+                wordAndImagesViewHolder.nineGridView.setOnImageClickListener((position1, view) ->
                     mImageWatcher.show((ImageView) view, wordAndImagesViewHolder.nineGridView.getImageViews(),
-                            friendCircleBean.getImageUrls());
-                });
+                            friendCircleBean.getImageUrls()));
                 wordAndImagesViewHolder.nineGridView.setAdapter(new NineImageAdapter(mContext, mRequestOptions,
                         mDrawableTransitionOptions, friendCircleBean.getImageUrls()));
             }
@@ -380,7 +379,7 @@ public class FriendCircleAdapter extends RecyclerView.Adapter<FriendCircleAdapte
             divideLine = itemView.findViewById(R.id.view_divide_line);
             translationTag = itemView.findViewById(R.id.img_translating);
             translationDesc = itemView.findViewById(R.id.txt_translation_desc);
-            txtPraiseContent.setMovementMethod(new TextMovementMothod());
+            txtPraiseContent.setMovementMethod(new TextMovementMethod());
         }
     }
 }

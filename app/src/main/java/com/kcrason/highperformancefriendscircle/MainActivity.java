@@ -112,6 +112,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     @Override
     public void onCommentClick(int position) {
         Toast.makeText(this, "you click comment", Toast.LENGTH_SHORT).show();
+//        mEmojiPanelView.showEmojiPanel(DataCenter.makeEmojiPanelAllTypes());
     }
 
     @Override

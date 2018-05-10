@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
-        findViewById(R.id.img_back).setOnClickListener(v -> startActivity(new Intent(MainActivity.this, EmojiPanelActivity.class)));
+//        findViewById(R.id.img_back).setOnClickListener(v -> startActivity(new Intent(MainActivity.this, EmojiPanelActivity.class)));
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -114,8 +114,8 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     @Override
     public void onCommentClick(int position) {
-        Toast.makeText(this, "you click comment", Toast.LENGTH_SHORT).show();
-//        mEmojiPanelView.showEmojiPanel();
+//        Toast.makeText(this, "you click comment", Toast.LENGTH_SHORT).show();
+        mEmojiPanelView.showEmojiPanel();
     }
 
     @Override

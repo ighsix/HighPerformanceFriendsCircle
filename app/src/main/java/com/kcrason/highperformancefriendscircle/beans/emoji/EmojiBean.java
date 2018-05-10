@@ -1,4 +1,4 @@
-package com.kcrason.highperformancefriendscircle.beans;
+package com.kcrason.highperformancefriendscircle.beans.emoji;
 
 import java.io.Serializable;
 

@@ -1,6 +1,7 @@
 package com.kcrason.highperformancefriendscircle;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +17,7 @@ import com.kcrason.highperformancefriendscircle.interfaces.OnPraiseOrCommentClic
 import com.kcrason.highperformancefriendscircle.others.DataCenter;
 import com.kcrason.highperformancefriendscircle.others.FriendsCircleAdapterDivideLine;
 import com.kcrason.highperformancefriendscircle.others.GlideSimpleTarget;
+import com.kcrason.highperformancefriendscircle.ui.activitys.EmojiPanelActivity;
 import com.kcrason.highperformancefriendscircle.utils.Utils;
 import com.kcrason.highperformancefriendscircle.widgets.EmojiPanelView;
 
@@ -43,11 +45,12 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mEmojiPanelView = findViewById(R.id.emoji_panel_view);
+        mEmojiPanelView.initEmojiPanel(DataCenter.emojiDataSources);
         mSwipeRefreshLayout = findViewById(R.id.swpie_refresh_layout);
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
-        //findViewById(R.id.img_back).setOnClickListener(v -> startActivity(new Intent(MainActivity.this, EmojiPanelActivity.class)));
+        findViewById(R.id.img_back).setOnClickListener(v -> startActivity(new Intent(MainActivity.this, EmojiPanelActivity.class)));
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -112,7 +115,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     @Override
     public void onCommentClick(int position) {
         Toast.makeText(this, "you click comment", Toast.LENGTH_SHORT).show();
-//        mEmojiPanelView.showEmojiPanel(DataCenter.makeEmojiPanelAllTypes());
+//        mEmojiPanelView.showEmojiPanel();
     }
 
     @Override

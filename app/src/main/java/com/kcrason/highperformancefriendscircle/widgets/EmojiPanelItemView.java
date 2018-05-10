@@ -16,7 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.kcrason.highperformancefriendscircle.R;
-import com.kcrason.highperformancefriendscircle.beans.EmojiBean;
+import com.kcrason.highperformancefriendscircle.beans.emoji.EmojiBean;
 import com.kcrason.highperformancefriendscircle.utils.Utils;
 
 import java.util.ArrayList;
@@ -66,7 +66,7 @@ public class EmojiPanelItemView extends LinearLayout {
         if (emojiBeans != null) {
             List<List<EmojiBean>> groupEmojiBeans = makeEmojiPanelFragments(emojiBeans);
             mViewPager.setAdapter(new EmojiPanelPagerItemAdapter(groupEmojiBeans));
-            mEmojiIndicators.setViewPager(mViewPager, false);
+            //mEmojiIndicators.setViewPager(mViewPager, false);
         }
     }
 

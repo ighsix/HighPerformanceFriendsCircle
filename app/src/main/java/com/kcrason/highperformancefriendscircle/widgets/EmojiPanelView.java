@@ -1,32 +1,74 @@
 package com.kcrason.highperformancefriendscircle.widgets;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.text.InputType;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.kcrason.highperformancefriendscircle.R;
-import com.kcrason.highperformancefriendscircle.beans.EmojiBean;
+import com.kcrason.highperformancefriendscircle.beans.emoji.EmojiBean;
+import com.kcrason.highperformancefriendscircle.beans.emoji.EmojiDataSource;
+import com.kcrason.highperformancefriendscircle.beans.emoji.EmojiPanelBean;
+import com.kcrason.highperformancefriendscircle.interfaces.OnKeyBoardStateListener;
 import com.kcrason.highperformancefriendscircle.utils.Utils;
 
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+import io.reactivex.Single;
+import io.reactivex.SingleOnSubscribe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
-public class EmojiPanelView extends LinearLayout {
+public class EmojiPanelView extends LinearLayout implements OnKeyBoardStateListener {
 
     private ViewPager mViewPager;
+
     private HorizontalEmojiIndicators mEmojiIndicators;
 
     private EmojiPanelPagerAdapter mEmojiPanelPagerAdapter;
+
+    private LinearLayout mLayoutInputPanel;
+
+    private LinearLayout mLayoutEmojiPanel;
+
+    private LinearLayout mLayoutPanel;
+
+    private EditText mEditText;
+
+    private RelativeLayout mLayoutEdite;
+
+    private FrameLayout mLayoutNull;
+
+    private List<EmojiDataSource> mEmojiDataSources;
 
     public EmojiPanelView(Context context) {
         super(context);
@@ -45,63 +87,238 @@ public class EmojiPanelView extends LinearLayout {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (event.getY() < Utils.getScreenHeight() - Utils.dp2px(254f)) {
+        if (event.getY() < Utils.getScreenHeight() - Utils.dp2px(254f) && isShowing()) {
             dismiss();
         }
         return super.onTouchEvent(event);
     }
 
+    public boolean isShowing() {
+        return mLayoutPanel != null && mLayoutPanel.getVisibility() == VISIBLE;
+    }
+
+
+    private void showSoftKeyBoard() {
+        InputMethodManager inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (inputMethodManager != null && mEditText != null) {
+            inputMethodManager.showSoftInput(mEditText, InputMethodManager.SHOW_IMPLICIT);
+        }
+    }
+
+
+    private void hideSoftKeyBoard() {
+        InputMethodManager inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (inputMethodManager != null && mEditText != null) {
+            inputMethodManager.hideSoftInputFromWindow(mEditText.getWindowToken(), 0);
+        }
+    }
+
 
     private void init() {
-        setVisibility(GONE);
         View itemView = LayoutInflater.from(getContext()).inflate(R.layout.view_emoji_panel, this, false);
+        mEditText = itemView.findViewById(R.id.edit_text);
+        mLayoutEdite = itemView.findViewById(R.id.layout_edit);
+        mLayoutEdite.setOnClickListener(v -> Single.timer(2000, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread())
+                .subscribe(aLong -> showSoftKeyBoard()));
+        mEditText.setOnFocusChangeListener((v, hasFocus) -> Log.i("KCrason", "onFocusChange: " + hasFocus));
+
+        mLayoutNull = itemView.findViewById(R.id.layout_null);
+        mLayoutEmojiPanel = itemView.findViewById(R.id.layout_emoji_panel);
+        mLayoutInputPanel = itemView.findViewById(R.id.layout_input_panel);
+        mLayoutPanel = itemView.findViewById(R.id.layout_panel);
         mViewPager = itemView.findViewById(R.id.view_pager);
         mViewPager.setOverScrollMode(OVER_SCROLL_NEVER);
         mEmojiIndicators = itemView.findViewById(R.id.emoji_indicators);
+        addOnSoftKeyBoardVisibleListener((Activity) getContext(), this);
         addView(itemView);
     }
 
 
-    public void showEmojiPanel(List<List<EmojiBean>> allEmojiTypes) {
-//        showOrHideAnimation(true);
-        setVisibility(VISIBLE);
-        if (allEmojiTypes != null) {
-            if (mEmojiPanelPagerAdapter == null) {
-                mEmojiPanelPagerAdapter = new EmojiPanelPagerAdapter(allEmojiTypes);
-            }
-            mViewPager.setAdapter(mEmojiPanelPagerAdapter);
-            mEmojiIndicators.setViewPager(mViewPager, true);
+    public void initEmojiPanel(List<EmojiDataSource> emojiDataSources) {
+        if (emojiDataSources != null && emojiDataSources.size() > 0) {
+            this.mEmojiDataSources = emojiDataSources;
+            asyncInitEmojiPanelData(emojiDataSources);
         }
     }
 
-//    private void showOrHideAnimation(final boolean isShow) {
-//        if (isShow) {
-//            setVisibility(VISIBLE);
-//        }
-//        TranslateAnimation animation = new TranslateAnimation(Animation.RELATIVE_TO_PARENT, 0.0f,
-//                Animation.RELATIVE_TO_PARENT, 0.0f, Animation.RELATIVE_TO_PARENT, isShow ? 1.0f : 0.0f,
-//                Animation.RELATIVE_TO_PARENT, isShow ? 0.0f : 1.0f);
-//        animation.setDuration(300);
-//        startAnimation(animation);
-//    }
+    private void changeLayoutNullParams(boolean isShowSoftKeyBoard) {
+        LinearLayout.LayoutParams params = (LayoutParams) mLayoutNull.getLayoutParams();
+        if (isShowSoftKeyBoard) {
+            params.weight = 1;
+            params.height = 0;
+            mLayoutNull.setLayoutParams(params);
+        } else {
+            params.weight = 0;
+            params.height = mDisplayHeight;
+            mLayoutNull.setLayoutParams(params);
+        }
+    }
+
+    private void changeEmojiPanelParams(int keyboardHeight) {
+        if (mLayoutEmojiPanel != null) {
+            LinearLayout.LayoutParams params = (LayoutParams) mLayoutEmojiPanel.getLayoutParams();
+            params.height = keyboardHeight;
+            mLayoutEmojiPanel.setLayoutParams(params);
+        }
+    }
+
+    boolean isVisiableForLast = false;
+
+    public void addOnSoftKeyBoardVisibleListener(Activity activity, final OnKeyBoardStateListener listener) {
+        final View decorView = activity.getWindow().getDecorView();
+        decorView.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
+            Rect rect = new Rect();
+            decorView.getWindowVisibleDisplayFrame(rect);
+            //计算出可见屏幕的高度
+            int displayHight = rect.bottom - rect.top;
+            //获得屏幕整体的高度
+            int hight = decorView.getHeight();
+            //获得键盘高度
+            int keyboardHeight = hight - displayHight - Utils.calcStatusBarHeight(getContext());
+            boolean visible = (double) displayHight / hight < 0.8;
+            if (visible != isVisiableForLast) {
+                listener.onSoftKeyBoardState(visible, keyboardHeight, displayHight);
+            }
+            isVisiableForLast = visible;
+        });
+    }
+
+    private int mDisplayHeight;
+
+    @Override
+    public void onSoftKeyBoardState(boolean visible, int keyboardHeight, int displayHeight) {
+        changeLayoutNullParams(visible);
+        if (visible) {
+            //显示
+            mKeyBoardHeight = keyboardHeight;
+            mDisplayHeight = displayHeight;
+            changeEmojiPanelParams(0);
+        } else {
+            //隐藏
+            changeEmojiPanelParams(mKeyBoardHeight);
+        }
+    }
+
+
+    private boolean isInitComplete;
+
+
+    @SuppressLint("CheckResult")
+    private void asyncInitEmojiPanelData(List<EmojiDataSource> emojiDataSources) {
+        Single.create((SingleOnSubscribe<List<EmojiPanelBean>>) emitter ->
+                emitter.onSuccess(generateEmojiPanelBeans(emojiDataSources)))
+                .subscribeOn(Schedulers.io()).subscribeOn(AndroidSchedulers.mainThread())
+                .subscribe((emojiPanelBeans, throwable) -> {
+                    mEmojiPanelPagerAdapter = new EmojiPanelPagerAdapter(emojiPanelBeans);
+                    mViewPager.setAdapter(mEmojiPanelPagerAdapter);
+                    mEmojiIndicators.setViewPager(mViewPager).setEmojiPanelView(this).setEmojiPanelBeans(emojiPanelBeans).build();
+                    isInitComplete = true;
+                });
+    }
+
+    public int getEmojiTypeSize() {
+        return mEmojiDataSources == null ? 0 : mEmojiDataSources.size();
+    }
+
+    public List<EmojiDataSource> getEmojiDataSources() {
+        return mEmojiDataSources;
+    }
+
+    public void showEmojiPanel() {
+        if (isInitComplete) {
+            if (mLayoutPanel != null) {
+                mLayoutPanel.setVisibility(VISIBLE);
+            }
+            showOrHideAnimation(true);
+        } else {
+            initEmojiPanel(mEmojiDataSources);
+        }
+    }
+
+    private void showOrHideAnimation(final boolean isShow) {
+        TranslateAnimation animation = new TranslateAnimation(Animation.RELATIVE_TO_PARENT, 0.0f,
+                Animation.RELATIVE_TO_PARENT, 0.0f, Animation.RELATIVE_TO_PARENT, isShow ? 1.0f : 0.0f,
+                Animation.RELATIVE_TO_PARENT, isShow ? 0.0f : 1.0f);
+        animation.setDuration(200);
+        mLayoutPanel.startAnimation(animation);
+    }
 
     public void dismiss() {
-//        showOrHideAnimation(false);
-        setVisibility(GONE);
+        showOrHideAnimation(false);
+        if (mLayoutPanel != null) {
+            mLayoutPanel.setVisibility(GONE);
+        }
+    }
+
+
+    private List<EmojiPanelBean> generateEmojiPanelBeans(List<EmojiDataSource> emojiDataSources) {
+        List<EmojiPanelBean> emojiPanelBeans = new ArrayList<>();
+        for (int i = 0; i < emojiDataSources.size(); i++) {
+            EmojiDataSource emojiDataSource = emojiDataSources.get(i);
+            List<EmojiPanelBean> result = makeEmojiPanelBeans(emojiDataSource.getEmojiList(), emojiDataSource.getEmojiType());
+            if (result != null) {
+                emojiPanelBeans.addAll(result);
+            }
+        }
+        return emojiPanelBeans;
+    }
+
+    private int getGroupCount(List<EmojiBean> emojiBeans) {
+        int emojiCount = emojiBeans.size();
+        int itemCount = emojiCount / 20;
+        int modular = emojiCount % 20;
+        if (modular == 0) {
+            return itemCount;
+        }
+        return itemCount + 1;
+    }
+
+    private int mKeyBoardHeight;
+
+    private List<EmojiPanelBean> makeEmojiPanelBeans(List<EmojiBean> sourceEmojiBeans, int emojiType) {
+        if (sourceEmojiBeans == null) {
+            return null;
+        }
+        List<EmojiPanelBean> emojiPanelBeans = new ArrayList<>(sourceEmojiBeans.size());
+        int sourceEmojiSize = sourceEmojiBeans.size();
+        int maxPage = getGroupCount(sourceEmojiBeans);
+        for (int i = 0; i < maxPage; i++) {
+            EmojiPanelBean emojiPanelBean = new EmojiPanelBean();
+            emojiPanelBean.setEmojiType(emojiType);
+            emojiPanelBean.setMaxPage(maxPage);
+            int start = i * 20;
+            int end = start + 20;
+            if (end < sourceEmojiSize) {
+                emojiPanelBean.setEmojiBeansPerPage(generateItemEmojiBeans(sourceEmojiBeans, start, end));
+            } else {
+                emojiPanelBean.setEmojiBeansPerPage(generateItemEmojiBeans(sourceEmojiBeans, start, sourceEmojiSize));
+            }
+            emojiPanelBeans.add(emojiPanelBean);
+        }
+        return emojiPanelBeans;
+    }
+
+    private List<EmojiBean> generateItemEmojiBeans(List<EmojiBean> emojiBeans, int start, int end) {
+        List<EmojiBean> targetEmojiBeans = new ArrayList<>();
+        for (int i = start; i < end; i++) {
+            EmojiBean emojiBean = emojiBeans.get(i);
+            targetEmojiBeans.add(emojiBean);
+        }
+        return targetEmojiBeans;
     }
 
 
     public final class EmojiPanelPagerAdapter extends PagerAdapter {
 
-        private List<List<EmojiBean>> allEmojiTypes;
+        private List<EmojiPanelBean> mEmojiPanelBeans;
 
-        public EmojiPanelPagerAdapter(List<List<EmojiBean>> allEmojiTypes) {
-            this.allEmojiTypes = allEmojiTypes;
+        public EmojiPanelPagerAdapter(List<EmojiPanelBean> emojiPanelBeans) {
+            this.mEmojiPanelBeans = emojiPanelBeans;
         }
 
         @Override
         public int getCount() {
-            return allEmojiTypes == null ? 0 : allEmojiTypes.size();
+            return mEmojiPanelBeans == null ? 0 : mEmojiPanelBeans.size();
         }
 
         @Override
@@ -110,22 +327,25 @@ public class EmojiPanelView extends LinearLayout {
         }
 
         public Drawable getDrawable(int position) {
-            if (allEmojiTypes != null && position < allEmojiTypes.size()) {
-                List<EmojiBean> emojiBeans = allEmojiTypes.get(position);
-                if (emojiBeans != null && emojiBeans.size() > 0) {
-                    return ContextCompat.getDrawable(getContext(), emojiBeans.get(0).getEmojiResource());
+            if (mEmojiPanelBeans != null && position < mEmojiPanelBeans.size()) {
+                EmojiPanelBean emojiPanelBean = mEmojiPanelBeans.get(position);
+                if (emojiPanelBean.getEmojiBeansPerPage() != null && emojiPanelBean.getEmojiBeansPerPage().size() > 0) {
+                    return ContextCompat.getDrawable(getContext(), emojiPanelBean.getEmojiBeansPerPage().get(0).getEmojiResource());
                 }
             }
             return ContextCompat.getDrawable(getContext(), R.drawable.emoji_01_angry);
         }
 
+
         @NonNull
         @Override
         public Object instantiateItem(@NonNull ViewGroup container, int position) {
-            EmojiPanelItemView emojiPanelItemView = new EmojiPanelItemView(container.getContext());
-            emojiPanelItemView.showItemEmojiPanel(allEmojiTypes.get(position));
-            container.addView(emojiPanelItemView);
-            return emojiPanelItemView;
+            RecyclerView recyclerView = new RecyclerView(container.getContext());
+            recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 7));
+            recyclerView.setOverScrollMode(OVER_SCROLL_NEVER);
+            recyclerView.setAdapter(new EmojiPanelItemRecyclerAdapter(getContext(), mEmojiPanelBeans.get(position).getEmojiBeansPerPage()));
+            container.addView(recyclerView);
+            return recyclerView;
         }
 
         @Override
@@ -133,4 +353,58 @@ public class EmojiPanelView extends LinearLayout {
             container.removeView((View) object);
         }
     }
+
+
+    public final class EmojiPanelItemRecyclerAdapter extends RecyclerView.Adapter<EmojiPanelItemViewHolder> {
+
+        private List<EmojiBean> mEmojiBeans;
+
+        private final static int MAX_COUNT = 20;
+        private Context mContext;
+
+        public EmojiPanelItemRecyclerAdapter(Context context, List<EmojiBean> emojiBeans) {
+            this.mContext = context;
+            this.mEmojiBeans = emojiBeans;
+        }
+
+        @NonNull
+        @Override
+        public EmojiPanelItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            return new EmojiPanelItemViewHolder(LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.item_recycler_emoji, parent, false));
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull EmojiPanelItemViewHolder holder, int position) {
+            if (position == mEmojiBeans.size()) {
+                holder.imgEmoji.setImageResource(R.drawable.emoji_delete_drawable);
+            } else {
+                holder.imgEmoji.setImageResource(mEmojiBeans.get(position).getEmojiResource());
+                holder.itemView.setOnClickListener(v -> Toast.makeText(mContext, mEmojiBeans.get(position).getEmojiName(), Toast.LENGTH_SHORT).show());
+            }
+        }
+
+        @Override
+        public int getItemCount() {
+            if (mEmojiBeans == null) {
+                return 0;
+            } else {
+                int drawSize = mEmojiBeans.size();
+                if (drawSize <= MAX_COUNT) {
+                    return drawSize + 1;
+                }
+                return MAX_COUNT + 1;
+            }
+        }
+    }
+
+    private final class EmojiPanelItemViewHolder extends RecyclerView.ViewHolder {
+        ImageView imgEmoji;
+
+        public EmojiPanelItemViewHolder(View itemView) {
+            super(itemView);
+            imgEmoji = itemView.findViewById(R.id.img_emoji);
+        }
+    }
+
 }

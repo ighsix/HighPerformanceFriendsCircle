@@ -17,12 +17,9 @@ import com.kcrason.highperformancefriendscircle.interfaces.OnPraiseOrCommentClic
 import com.kcrason.highperformancefriendscircle.others.DataCenter;
 import com.kcrason.highperformancefriendscircle.others.FriendsCircleAdapterDivideLine;
 import com.kcrason.highperformancefriendscircle.others.GlideSimpleTarget;
-import com.kcrason.highperformancefriendscircle.ui.activitys.EmojiPanelActivity;
 import com.kcrason.highperformancefriendscircle.utils.Utils;
 import com.kcrason.highperformancefriendscircle.widgets.EmojiPanelView;
-
 import java.util.List;
-
 import ch.ielse.view.imagewatcher.ImageWatcher;
 import io.reactivex.Single;
 import io.reactivex.SingleOnSubscribe;
@@ -37,7 +34,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     private Disposable mDisposable;
     private FriendCircleAdapter mFriendCircleAdapter;
     private ImageWatcher mImageWatcher;
-
     private EmojiPanelView mEmojiPanelView;
 
     @Override

@@ -62,7 +62,8 @@
             </RelativeLayout>
 
 
-            <ImageView android:id="@+id/img_switch"
+            <ImageView
+                android:id="@+id/img_switch"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:padding="8dp"

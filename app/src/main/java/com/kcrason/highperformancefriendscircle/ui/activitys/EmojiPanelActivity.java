@@ -11,7 +11,6 @@ import android.widget.TextView;
 import com.kcrason.highperformancefriendscircle.R;
 import com.kcrason.highperformancefriendscircle.others.DataCenter;
 import com.kcrason.highperformancefriendscircle.widgets.EmojiPanelView;
-import com.kcrason.highperformancefriendscircle.widgets.TestLayout;
 
 
 public class EmojiPanelActivity extends AppCompatActivity {
@@ -24,19 +23,5 @@ public class EmojiPanelActivity extends AppCompatActivity {
         EmojiPanelView emojiPanelView = findViewById(R.id.emoji_panel_view);
         emojiPanelView.initEmojiPanel(DataCenter.emojiDataSources);
         findViewById(R.id.show).setOnClickListener(v -> emojiPanelView.showEmojiPanel());
-//        TestLayout testLayout = findViewById(R.id.test_layout);
-//        findViewById(R.id.btn_add_view).setOnClickListener(v -> {
-//            for (int i = 0; i < 10; i++) {
-//                TextView textView = new TextView(this);
-//                String tag = "这是TestLayou添加子View时调用的";
-//                textView.setText(tag);
-//                testLayout.setTag(tag);
-//                testLayout.addViewInLayout(textView, i,
-//                        new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-//                                ViewGroup.LayoutParams.WRAP_CONTENT), true);
-//            }
-//            //添加View之后requestLayout一次
-//            testLayout.requestLayout();
-//        });
     }
 }

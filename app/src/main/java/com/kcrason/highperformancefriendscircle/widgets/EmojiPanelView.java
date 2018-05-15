@@ -13,6 +13,8 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.SpannableStringBuilder;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -25,7 +27,6 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.kcrason.highperformancefriendscircle.R;
@@ -33,6 +34,7 @@ import com.kcrason.highperformancefriendscircle.beans.emoji.EmojiBean;
 import com.kcrason.highperformancefriendscircle.beans.emoji.EmojiDataSource;
 import com.kcrason.highperformancefriendscircle.beans.emoji.EmojiPanelBean;
 import com.kcrason.highperformancefriendscircle.interfaces.OnKeyBoardStateListener;
+import com.kcrason.highperformancefriendscircle.utils.TextLinkifyUtils;
 import com.kcrason.highperformancefriendscircle.utils.Utils;
 
 import java.util.ArrayList;
@@ -41,7 +43,6 @@ import java.util.List;
 import io.reactivex.Single;
 import io.reactivex.SingleOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 public class EmojiPanelView extends LinearLayout implements OnKeyBoardStateListener {
@@ -52,21 +53,22 @@ public class EmojiPanelView extends LinearLayout implements OnKeyBoardStateListe
 
     private EmojiPanelPagerAdapter mEmojiPanelPagerAdapter;
 
-    private LinearLayout mLayoutInputPanel;
-
     private LinearLayout mLayoutEmojiPanel;
 
     private LinearLayout mLayoutPanel;
 
     private EditText mEditText;
 
-    private RelativeLayout mLayoutEdite;
-
     private FrameLayout mLayoutNull;
 
     private List<EmojiDataSource> mEmojiDataSources;
 
     private ImageView mImageSwitch;
+
+    private int mDisplayHeight;
+
+    private boolean isKeyBoardShow;
+    private boolean isInitComplete;
 
     public EmojiPanelView(Context context) {
         super(context);
@@ -122,7 +124,6 @@ public class EmojiPanelView extends LinearLayout implements OnKeyBoardStateListe
     private void init() {
         View itemView = LayoutInflater.from(getContext()).inflate(R.layout.view_emoji_panel, this, false);
         mEditText = itemView.findViewById(R.id.edit_text);
-        mLayoutEdite = itemView.findViewById(R.id.layout_edit);
         mEditText.setOnTouchListener((v, event) -> {
             showSoftKeyBoard();
             return true;
@@ -142,7 +143,6 @@ public class EmojiPanelView extends LinearLayout implements OnKeyBoardStateListe
         });
         mLayoutNull = itemView.findViewById(R.id.layout_null);
         mLayoutEmojiPanel = itemView.findViewById(R.id.layout_emoji_panel);
-        mLayoutInputPanel = itemView.findViewById(R.id.layout_input_panel);
         mLayoutPanel = itemView.findViewById(R.id.layout_panel);
         mViewPager = itemView.findViewById(R.id.view_pager);
         mViewPager.setOverScrollMode(OVER_SCROLL_NEVER);
@@ -201,9 +201,6 @@ public class EmojiPanelView extends LinearLayout implements OnKeyBoardStateListe
         });
     }
 
-    private int mDisplayHeight;
-
-    private boolean isKeyBoardShow;
 
     @Override
     public void onSoftKeyBoardState(boolean visible, int keyboardHeight, int displayHeight) {
@@ -213,9 +210,6 @@ public class EmojiPanelView extends LinearLayout implements OnKeyBoardStateListe
             mDisplayHeight = displayHeight;
         }
     }
-
-
-    private boolean isInitComplete;
 
 
     @SuppressLint("CheckResult")
@@ -233,10 +227,6 @@ public class EmojiPanelView extends LinearLayout implements OnKeyBoardStateListe
 
     public int getEmojiTypeSize() {
         return mEmojiDataSources == null ? 0 : mEmojiDataSources.size();
-    }
-
-    public List<EmojiDataSource> getEmojiDataSources() {
-        return mEmojiDataSources;
     }
 
     public void showEmojiPanel() {
@@ -264,7 +254,8 @@ public class EmojiPanelView extends LinearLayout implements OnKeyBoardStateListe
         if (mLayoutPanel != null) {
             mLayoutPanel.setVisibility(GONE);
         }
-        changeEmojiPanelParams(0);
+        mImageSwitch.setImageResource(R.drawable.input_smile_drawable);
+        hideSoftKeyBoard();
     }
 
 
@@ -313,6 +304,14 @@ public class EmojiPanelView extends LinearLayout implements OnKeyBoardStateListe
             emojiPanelBeans.add(emojiPanelBean);
         }
         return emojiPanelBeans;
+    }
+
+
+    private void inputEmoji(String emojiName) {
+        int start = mEditText.getSelectionStart();
+        Editable editable = mEditText.getEditableText();
+        SpannableStringBuilder spannable = TextLinkifyUtils.getLinkifyTextContent(mEditText, " " + emojiName, TextLinkifyUtils.TextLinkifyStatus.EMOJI);
+        editable.insert(start, spannable);
     }
 
     private List<EmojiBean> generateItemEmojiBeans(List<EmojiBean> emojiBeans, int start, int end) {
@@ -397,7 +396,7 @@ public class EmojiPanelView extends LinearLayout implements OnKeyBoardStateListe
                 holder.imgEmoji.setImageResource(R.drawable.emoji_delete_drawable);
             } else {
                 holder.imgEmoji.setImageResource(mEmojiBeans.get(position).getEmojiResource());
-                holder.itemView.setOnClickListener(v -> Toast.makeText(mContext, mEmojiBeans.get(position).getEmojiName(), Toast.LENGTH_SHORT).show());
+                holder.itemView.setOnClickListener(v -> inputEmoji(mEmojiBeans.get(position).getEmojiName()));
             }
         }
 

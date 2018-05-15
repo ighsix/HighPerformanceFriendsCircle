@@ -60,7 +60,7 @@ public class SpanUtils {
                 }
                 builder.setSpan(new TextClickSpan(context, praiseUserName), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
-            builder.setSpan(new VerticalImageSpan(context, ContextCompat.getDrawable(context, R.drawable.heart_drawable_blue)),
+            builder.setSpan(new VerticalImageSpan(ContextCompat.getDrawable(context, R.drawable.heart_drawable_blue)),
                     0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             return builder;
         }

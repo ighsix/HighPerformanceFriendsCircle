@@ -14,11 +14,12 @@ public class VerticalImageSpan extends ImageSpan {
 
     private int mDrawableSize;
 
-    public VerticalImageSpan(Context context, Drawable drawable) {
+    public VerticalImageSpan(Drawable drawable) {
         super(drawable);
         this.mDrawable = drawable;
         this.mDrawableSize = Utils.dp2px(15f);
     }
+
 
     /**
      * update the text line height

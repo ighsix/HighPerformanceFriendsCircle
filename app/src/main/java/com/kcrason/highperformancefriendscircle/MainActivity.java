@@ -50,7 +50,8 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
-//        findViewById(R.id.img_back).setOnClickListener(v -> startActivity(new Intent(MainActivity.this, EmojiPanelActivity.class)));
+//        findViewById(R.id.img_back).setOnClickListener(v ->
+//                startActivity(new Intent(MainActivity.this, EmojiPanelActivity.class)));
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -83,7 +84,8 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     private void asyncMakeData() {
         mDisposable = Single.create((SingleOnSubscribe<List<FriendCircleBean>>) emitter ->
-                emitter.onSuccess(DataCenter.makeFriendCircleBeans(this))).subscribeOn(Schedulers.io())
+                emitter.onSuccess(DataCenter.makeFriendCircleBeans(this)))
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe((friendCircleBeans, throwable) -> {
                     Utils.hideSwipeRefreshLayout(mSwipeRefreshLayout);

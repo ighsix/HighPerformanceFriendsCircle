@@ -1,22 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <Button
-        android:id="@+id/btn_add_view"
+    <Button android:text="show"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="在TestLayout中添加View"/>
+        android:id="@+id/show"/>
 
-    <com.kcrason.highperformancefriendscircle.widgets.TestLayout
-        android:id="@+id/test_layout"
+    <com.kcrason.highperformancefriendscircle.widgets.EmojiPanelView
+        android:id="@+id/emoji_panel_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-    </com.kcrason.highperformancefriendscircle.widgets.TestLayout>
+        android:layout_height="match_parent"/>
 
-</LinearLayout>
+</FrameLayout>
 

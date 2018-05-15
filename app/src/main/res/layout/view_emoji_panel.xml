@@ -5,7 +5,6 @@
     android:id="@+id/layout_panel"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="bottom"
     android:orientation="vertical"
     android:visibility="gone">
 
@@ -63,7 +62,7 @@
             </RelativeLayout>
 
 
-            <ImageView
+            <ImageView android:id="@+id/img_switch"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:padding="8dp"
@@ -88,7 +87,7 @@
     <LinearLayout
         android:id="@+id/layout_emoji_panel"
         android:layout_width="match_parent"
-        android:layout_height="250dp"
+        android:layout_height="0dp"
         android:orientation="vertical">
 
         <android.support.v4.view.ViewPager

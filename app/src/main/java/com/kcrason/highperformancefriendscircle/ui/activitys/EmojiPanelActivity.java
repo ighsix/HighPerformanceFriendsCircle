@@ -1,12 +1,8 @@
 package com.kcrason.highperformancefriendscircle.ui.activitys;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.kcrason.highperformancefriendscircle.R;
 import com.kcrason.highperformancefriendscircle.others.DataCenter;

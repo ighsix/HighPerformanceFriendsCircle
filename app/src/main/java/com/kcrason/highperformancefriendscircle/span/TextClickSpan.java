@@ -2,7 +2,7 @@ package com.kcrason.highperformancefriendscircle.span;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.support.v4.content.ContextCompat;
+import androidx.core.content.ContextCompat;
 import android.text.TextPaint;
 import android.text.style.ClickableSpan;
 import android.view.View;

@@ -3,7 +3,7 @@ package com.kcrason.highperformancefriendscircle.utils;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Paint;
-import android.support.v4.widget.SwipeRefreshLayout;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.PopupMenu;

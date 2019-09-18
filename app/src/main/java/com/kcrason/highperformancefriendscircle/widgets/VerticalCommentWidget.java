@@ -1,8 +1,8 @@
 package com.kcrason.highperformancefriendscircle.widgets;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import android.text.SpannableStringBuilder;
 import android.util.AttributeSet;
 import android.view.View;
